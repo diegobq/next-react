@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Next App',
+  title: 'Authentication',
   description: 'Next - React',
 }
 

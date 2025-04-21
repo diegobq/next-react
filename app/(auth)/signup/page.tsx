@@ -51,12 +51,9 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen flex flex-col justify-center px-4 py-8 bg-gray-50 dark:bg-[#121212] sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-sm sm:max-w-md">
-        <h1 className="text-center text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white">
-          Mode
-        </h1>
-        <p className="mt-2 text-center text-base sm:text-lg text-gray-600 dark:text-gray-300">
+        <h2 className="mt-2 text-center text-2xl font-bold text-gray-900 dark:text-white">
           Create a new account
-        </p>
+        </h2>
       </div>
 
       <div className="mt-8 mx-auto w-full max-w-sm sm:max-w-md">
