@@ -1,13 +1,13 @@
-import "../globals.css";
-import { redirect } from "next/navigation";
-import { getUser } from "@/lib/dal";
-import Link from "next/link";
-import SignoutButton from "@/app/components/SignoutButton";
+import '../globals.css'
+import { redirect } from 'next/navigation'
+import { getUser } from '@/lib/dal'
+import Link from 'next/link'
+import SignoutButton from '@/app/components/SignoutButton'
 
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   const user = await getUser() // returns null if not logged in
 

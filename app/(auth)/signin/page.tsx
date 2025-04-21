@@ -50,14 +50,14 @@ function SignInPage() {
 
   return (
     <>
-        <Form action={formAction} className="space-y-6">
+      <Form action={formAction} className="space-y-6">
         {state?.message && !state.success && (
-            <FormError>{state.message}</FormError>
-            )}
+          <FormError>{state.message}</FormError>
+        )}
 
         <FormGroup>
-            <FormLabel htmlFor="email">Email</FormLabel>
-            <FormInput
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <FormInput
             id="email"
             name="email"
             type="email"
@@ -66,17 +66,17 @@ function SignInPage() {
             disabled={isPending}
             aria-describedby="email-error"
             className={state?.errors?.email ? 'border-red-500' : ''}
-            />
-            {state?.errors?.email && (
-                <p id="email-error" className="text-sm text-red-500">
-                {state.errors.email[0]}
+          />
+          {state?.errors?.email && (
+            <p id="email-error" className="text-sm text-red-500">
+              {state.errors.email[0]}
             </p>
-            )}
+          )}
         </FormGroup>
 
         <FormGroup>
-            <FormLabel htmlFor="password">Password</FormLabel>
-            <FormInput
+          <FormLabel htmlFor="password">Password</FormLabel>
+          <FormInput
             id="password"
             name="password"
             type="password"
@@ -85,35 +85,35 @@ function SignInPage() {
             disabled={isPending}
             aria-describedby="password-error"
             className={state?.errors?.password ? 'border-red-500' : ''}
-            />
-            {state?.errors?.password && (
-                <p id="password-error" className="text-sm text-red-500">
-                {state.errors.password[0]}
+          />
+          {state?.errors?.password && (
+            <p id="password-error" className="text-sm text-red-500">
+              {state.errors.password[0]}
             </p>
-            )}
+          )}
         </FormGroup>
 
         <div>
-            <Button type="submit" className="w-full" isLoading={isPending}>
+          <Button type="submit" className="w-full" isLoading={isPending}>
             Sign in
-            </Button>
+          </Button>
         </div>
-        </Form>
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-            <div className="bg-white dark:bg-[#1A1A1A] py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100 dark:border-dark-border-subtle">
-            <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                Don&apos;t have an account?{' '}
-                <Link
-                    href="/signup"
-                    className="font-medium text-gray-900 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
-                >
-                    Sign up
-                </Link>
-                </p>
-            </div>
-            </div>
+      </Form>
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white dark:bg-[#1A1A1A] py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100 dark:border-dark-border-subtle">
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Don&apos;t have an account?{' '}
+              <Link
+                href="/signup"
+                className="font-medium text-gray-900 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
         </div>
+      </div>
     </>
   )
 }
