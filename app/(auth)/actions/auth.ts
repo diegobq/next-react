@@ -6,6 +6,7 @@ import {
   createSession,
   createUser,
   deleteSession,
+  getSession,
 } from '@/lib/auth'
 import { getUserByEmail } from '@/lib/dal'
 import { mockDelay } from '@/lib/utils'
@@ -104,6 +105,12 @@ export async function signIn(formData: FormData): Promise<ActionResponse> {
 
 export async function signUp(formData: FormData): Promise<ActionResponse> {
   try {
+    const session = await getSession() // returns null if not logged in
+
+    if (session) {
+      redirect('/')
+    }
+
     // Extract data from form
     const data = {
       email: formData.get('email') as string,

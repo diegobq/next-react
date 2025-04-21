@@ -1,4 +1,4 @@
-import path from 'path' 
+import path from 'path'
 
 const buildEslintCommand = (filenames) =>
   `next lint --fix --file ${filenames
@@ -6,8 +6,5 @@ const buildEslintCommand = (filenames) =>
     .join(' --file ')}`
 
 export default {
-  '*.{js,jsx,ts,tsx}': [
-    "prettier --write",
-    buildEslintCommand
-    ],
+  '*.{js,jsx,ts,tsx}': ['prettier --write', buildEslintCommand],
 }
