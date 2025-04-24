@@ -2,18 +2,15 @@
 
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
-import Button from '@/app/components/ui/Button'
-import {
-  Form,
-  FormGroup,
-  FormLabel,
-  FormInput,
-  FormError,
-} from '@/app/components/ui/Form'
-import Link from 'next/link'
 // import toast from 'react-hot-toast'
-import { signUp, ActionResponse } from '@/app/(auth)/actions/auth'
-import clsx from 'clsx'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+
+import { ActionResponse } from '@/app/(auth)/actions/auth'
+import { auth } from '@/lib/firebase'
+
+import AuthHeader from '../components/AuthHeader'
+import AuthFooter from '../components/AuthFooter'
+import AuthForm from '../components/AuthForm'
 
 const initialState: ActionResponse = {
   success: false,
@@ -28,21 +25,31 @@ export default function SignUpPage() {
   const [state, formAction, isPending] = useActionState<
     ActionResponse,
     FormData
-  >(async (prevState: ActionResponse, formData: FormData) => {
+  >(async (_, formData: FormData) => {
     try {
-      const result = await signUp(formData)
+      const email = formData.get('email') as string
+      const password = formData.get('password') as string
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      )
 
       // Handle successful submission
-      if (result.success) {
+      if (userCredential.user) {
         // toast.success('Account created successfully')
-        router.push('/')
+        router.push('/signin')
       }
 
-      return result
-    } catch (err) {
       return {
         success: false,
-        message: (err as Error).message || 'An error occurred',
+        message: 'Signup failed. Try again.',
+        errors: undefined,
+      }
+    } catch {
+      return {
+        success: false,
+        message: 'Signup call failed. Try again.',
         errors: undefined,
       }
     }
@@ -50,106 +57,22 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center px-4 py-8 bg-gray-50 dark:bg-[#121212] sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-sm sm:max-w-md">
-        <h2 className="mt-2 text-center text-2xl font-bold text-gray-900 dark:text-white">
-          Create a new account
-        </h2>
-      </div>
+      <AuthHeader>Create a new account</AuthHeader>
 
       <div className="mt-8 mx-auto w-full max-w-sm sm:max-w-md">
         <div className="bg-white dark:bg-[#1A1A1A] py-6 px-4 sm:px-6 sm:py-8 shadow-md sm:rounded-2xl border border-gray-200 dark:border-dark-border-subtle">
-          <Form action={formAction} className="space-y-5 sm:space-y-6">
-            {state?.message && !state.success && (
-              <FormError>{state.message}</FormError>
-            )}
+          <AuthForm
+            action={formAction}
+            state={state}
+            isPending={isPending}
+            ctaLabel="Sign up"
+          />
 
-            <FormGroup>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <FormInput
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                disabled={isPending}
-                aria-describedby="email-error"
-                className={clsx(
-                  'w-full transition focus:ring-2 focus:ring-primary focus:border-primary',
-                  state?.errors?.email && 'border-red-500'
-                )}
-              />
-              {state?.errors?.email && (
-                <p id="email-error" className="text-sm text-red-500 mt-1">
-                  {state.errors.email[0]}
-                </p>
-              )}
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <FormInput
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                disabled={isPending}
-                aria-describedby="password-error"
-                className={clsx(
-                  'w-full transition focus:ring-2 focus:ring-primary focus:border-primary',
-                  state?.errors?.password && 'border-red-500'
-                )}
-              />
-              {state?.errors?.password && (
-                <p id="password-error" className="text-sm text-red-500 mt-1">
-                  {state.errors.password[0]}
-                </p>
-              )}
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-              <FormInput
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                disabled={isPending}
-                aria-describedby="confirmPassword-error"
-                className={clsx(
-                  'w-full transition focus:ring-2 focus:ring-primary focus:border-primary',
-                  state?.errors?.confirmPassword && 'border-red-500'
-                )}
-              />
-              {state?.errors?.confirmPassword && (
-                <p
-                  id="confirmPassword-error"
-                  className="text-sm text-red-500 mt-1"
-                >
-                  {state.errors.confirmPassword[0]}
-                </p>
-              )}
-            </FormGroup>
-
-            <div>
-              <Button type="submit" className="w-full" isLoading={isPending}>
-                Sign up
-              </Button>
-            </div>
-          </Form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Already have an account?{' '}
-              <Link
-                href="/signin"
-                className="font-medium text-gray-900 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
-              >
-                Sign in
-              </Link>
-            </p>
-          </div>
+          <AuthFooter
+            label="Already have an account? "
+            href="/signin"
+            linkLabel="Sign in"
+          />
         </div>
       </div>
     </div>
