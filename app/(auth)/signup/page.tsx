@@ -8,9 +8,14 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { ActionResponse } from '@/app/(auth)/actions/auth'
 import { auth } from '@/lib/firebase'
 
-import AuthHeader from '../components/AuthHeader'
-import AuthFooter from '../components/AuthFooter'
-import AuthForm from '../components/AuthForm'
+import {
+  AuthFooter,
+  AuthForm,
+  AuthFormWrapper,
+  AuthHeader,
+  AuthPageWrapper,
+} from '../components'
+import { HOME_PAGE } from '../constants'
 
 const initialState: ActionResponse = {
   success: false,
@@ -38,7 +43,7 @@ export default function SignUpPage() {
       // Handle successful submission
       if (userCredential.user) {
         // toast.success('Account created successfully')
-        router.push('/signin')
+        router.push(HOME_PAGE)
       }
 
       return {
@@ -56,25 +61,23 @@ export default function SignUpPage() {
   }, initialState)
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-4 py-8 bg-gray-50 dark:bg-[#121212] sm:px-6 lg:px-8">
+    <AuthPageWrapper>
       <AuthHeader>Create a new account</AuthHeader>
 
-      <div className="mt-8 mx-auto w-full max-w-sm sm:max-w-md">
-        <div className="bg-white dark:bg-[#1A1A1A] py-6 px-4 sm:px-6 sm:py-8 shadow-md sm:rounded-2xl border border-gray-200 dark:border-dark-border-subtle">
-          <AuthForm
-            action={formAction}
-            state={state}
-            isPending={isPending}
-            ctaLabel="Sign up"
-          />
+      <AuthFormWrapper>
+        <AuthForm
+          action={formAction}
+          state={state}
+          isPending={isPending}
+          ctaLabel="Sign up"
+        />
 
-          <AuthFooter
-            label="Already have an account? "
-            href="/signin"
-            linkLabel="Sign in"
-          />
-        </div>
-      </div>
-    </div>
+        <AuthFooter
+          label="Already have an account? "
+          href="/signin"
+          linkLabel="Sign in"
+        />
+      </AuthFormWrapper>
+    </AuthPageWrapper>
   )
 }

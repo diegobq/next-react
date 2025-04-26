@@ -2,14 +2,20 @@
 
 // import { LogOutIcon } from 'lucide-react'
 import { useTransition } from 'react'
-import { signOut } from '@/app/(auth)/actions/auth'
+
+import { signOut } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+import { useRouter } from 'next/navigation'
+import { DEFAULT_AUTH_PAGE } from '../constants'
 
 export default function SignOutButton() {
+  const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
   const handleSignOut = () => {
     startTransition(async () => {
-      await signOut()
+      await signOut(auth)
+      router.push(DEFAULT_AUTH_PAGE)
     })
   }
 
