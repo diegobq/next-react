@@ -1,32 +1,18 @@
 'use client'
 
 // import { LogOutIcon } from 'lucide-react'
-import { useTransition } from 'react'
-
-import { signOut } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
-import { useRouter } from 'next/navigation'
-import { DEFAULT_AUTH_PAGE } from '../constants'
+import { useAuth } from '../AuthContext/AuthContext'
 
 export default function SignOutButton() {
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
-
-  const handleSignOut = () => {
-    startTransition(async () => {
-      await signOut(auth)
-      router.push(DEFAULT_AUTH_PAGE)
-    })
-  }
+  const { logout } = useAuth()
 
   return (
     <button
-      onClick={handleSignOut}
-      disabled={isPending}
+      onClick={logout}
       className="flex items-center w-full px-2 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
     >
       {/* <LogOutIcon size={20} className="mr-2" /> */}
-      <span>{isPending ? 'Signing out...' : 'Sign Out'}</span>
+      <span>Sign Out</span>
     </button>
   )
 }
