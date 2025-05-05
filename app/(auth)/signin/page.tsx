@@ -15,7 +15,8 @@ import {
   AuthHeader,
   AuthPageWrapper,
 } from '../components'
-import { HOME_PAGE } from '../constants'
+import { HOME_PAGE, REDIRECT_PAGE } from '../constants'
+import { decodeRedirectPage } from '../redirectPage'
 
 const initialState: ActionResponse = {
   success: false,
@@ -26,9 +27,8 @@ const initialState: ActionResponse = {
 export default function SignUpPage() {
   const router = useRouter()
 
-  // Use useActionState hook for the form submission action
   const [state, formAction, isPending] = useActionState<
-    ActionResponse,
+    ActionResponse | undefined,
     FormData
   >(async (_, formData: FormData) => {
     try {
@@ -40,17 +40,20 @@ export default function SignUpPage() {
         password
       )
 
-      // Handle successful submission
-      if (userCredential.user) {
-        // toast.success('Account created successfully')
-        router.push(HOME_PAGE)
+      if (!userCredential.user) {
+        return {
+          success: false,
+          message: 'Signin failed. Try again.',
+          errors: undefined,
+        }
       }
 
-      return {
-        success: false,
-        message: 'Signin failed. Try again.',
-        errors: undefined,
-      }
+      // toast.success('Account created successfully')
+      const urlParams = new URLSearchParams(window.location.search)
+      const redirectPage = urlParams.get(REDIRECT_PAGE)
+
+      const page = redirectPage ? decodeRedirectPage(redirectPage) : HOME_PAGE
+      router.push(page)
     } catch {
       return {
         success: false,

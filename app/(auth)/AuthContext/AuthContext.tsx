@@ -5,8 +5,14 @@ import { User, onAuthStateChanged, signOut } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { usePathname, useRouter } from 'next/navigation'
 
-import { DEFAULT_AUTH_PAGE, HOME_PAGE, SKIP_AUTH_PATHNAME } from '../constants'
+import {
+  DEFAULT_AUTH_PAGE,
+  HOME_PAGE,
+  REDIRECT_PAGE,
+  SKIP_AUTH_PATHNAME,
+} from '../constants'
 import { LoadingSpinner } from '@/app/components/ui'
+import { encodeRedirectPage } from '../redirectPage'
 
 interface AuthContextType {
   user: User | null
@@ -36,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const redirect =
           pathname === HOME_PAGE
             ? ''
-            : `?redirect=${encodeURIComponent(pathname)}`
+            : `?${REDIRECT_PAGE}=${encodeRedirectPage(pathname)}`
         router.push(`${DEFAULT_AUTH_PAGE}${redirect}`)
       }
     })
