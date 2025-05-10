@@ -69,10 +69,10 @@ export const getSession = cache(async () => {
   }
 })
 
-export async function createUser(email: string) {
+export async function createUser(email: string, password: string) {
   return new Promise<IUser>((resolve) =>
     resolve({
-      id: `${email}-id`,
+      id: `${email}-id-${password}`,
       email,
     })
   )
