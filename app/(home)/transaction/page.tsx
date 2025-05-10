@@ -1,203 +1,60 @@
-'use client'
+import { get } from './actions'
+import { months } from './constants'
+import { TransactionProps } from './types'
 
-import { useEffect, useState } from 'react'
-import { SelectProps } from './types'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { DEFAULT_TRANSACTION_TYPE } from './constants'
-
-const today = new Date()
-const currentPeriod = today.getFullYear()
-
-const periodConfig = (value: number): SelectProps => ({
-  id: `${value}`,
-  value,
-  label: `${value}`,
-})
-
-const periodsConfig: SelectProps[] = Array.from({ length: 15 }, (_, i) =>
-  periodConfig(2019 + i)
-)
-
-const typesConfig = [
-  {
-    id: 'buy',
-    label: 'buy',
-    value: 'buy',
-  },
-  {
-    id: 'sell',
-    label: 'sell',
-    value: 'sell',
-  },
-]
-const fieldsConfig = [
-  {
-    id: 'date',
-    name: 'date',
-    type: 'date',
-    required: true,
-  },
-  {
-    id: 'quantity',
-    name: 'quantity',
-    type: 'number',
-    min: 1,
-    step: '1',
-    required: true,
-  },
-  {
-    id: 'price',
-    name: 'price',
-    type: 'number',
-    min: 1,
-    step: '0.50',
-    required: true,
-  },
-]
-
-export default function FormPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const urlType = searchParams.get('type')
-
-  const [form, setForm] = useState({
-    type: urlType || DEFAULT_TRANSACTION_TYPE,
-    date: today.toISOString().split('T')[0],
-    period: currentPeriod,
-    quantity: '',
-    price: '',
-  })
-
-  useEffect(() => {
-    if (!urlType) {
-      const params = new URLSearchParams(searchParams.toString())
-      if (form.type) {
-        params.set('type', form.type)
-        router.replace(`?${params.toString()}`)
-      }
-    }
-  }, [])
-
-  const handleType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target
-    const params = new URLSearchParams(searchParams.toString())
-    if (value) {
-      params.set('type', value)
-    } else {
-      params.delete('type')
-    }
-    router.replace(`?${params.toString()}`)
-    handleChange(e)
-  }
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('Form data:', form)
-  }
+export default async function TransactionsPage() {
+  const { data } = await get()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-8 space-y-6 w-full max-w-md"
-      >
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
-          {form.type === 'buy' && 'Buying transaction'}
-          {form.type === 'sell' && 'Selling transaction'}
-          {!form.type && 'Save Data'}
-        </h2>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex flex-col items-center">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        Transactions
+      </h1>
 
-        <div className="flex flex-col">
-          <label
-            htmlFor="type"
-            className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200"
-          >
-            Type
-          </label>
-          <select
-            id="type"
-            name="type"
-            value={form.type}
-            onChange={handleType}
-            className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-            required
-          >
-            {typesConfig.map(({ id, label, value }) => (
-              <option key={id} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="period"
-            className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200"
-          >
-            Period
-          </label>
-          <select
-            id="period"
-            name="period"
-            value={form.period}
-            onChange={handleChange}
-            className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-            required
-          >
-            {periodsConfig.map(({ id, label, value }) => (
-              <option key={id} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {fieldsConfig.map(({ id, name, type, min, step, required }) => (
-          <div className="flex flex-col" key={id}>
-            <label
-              htmlFor={name}
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200 capitalize"
-            >
-              {name}
-            </label>
-            <input
-              type={type}
-              id={id}
-              name={name}
-              value={form[name as keyof typeof form]}
-              onChange={handleChange}
-              className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-              min={min}
-              step={step}
-              required={!!required}
-            />
-          </div>
-        ))}
-
-        <button
-          type="submit"
-          disabled={form.type !== 'buy' && form.type !== 'sell'}
-          className={`w-full py-2 rounded-md transition text-white
-    ${
-      form.type === 'buy'
-        ? 'bg-green-600 hover:bg-green-700'
-        : form.type === 'sell'
-          ? 'bg-red-600 hover:bg-red-700'
-          : 'bg-blue-600 hover:bg-blue-700'
-    }`}
+      <div className="flex gap-4 mb-6">
+        <a
+          href="/transaction/new?type=buy"
+          className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
         >
-          {form.type === 'buy' && 'Confirm Purchase'}
-          {form.type === 'sell' && 'Confirm Sale'}
-          {!form.type && 'Save'}
-        </button>
-      </form>
+          New Buy
+        </a>
+        <a
+          href="/transaction/new?type=sell"
+          className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+        >
+          New Sell
+        </a>
+      </div>
+
+      <div className="w-full max-w-2xl space-y-4">
+        {!data?.length && (
+          <p className="text-gray-500 dark:text-gray-300 text-center">
+            No transactions found.
+          </p>
+        )}
+        {!!data?.length &&
+          (data as TransactionProps[])
+            .sort(({ period: t1p, month: t1m }, { period: t2p, month: t2m }) =>
+              t1p === t2p ? t2m - t1m : t2p - t1p
+            )
+            .map((tx, index) => (
+              <div
+                key={index}
+                className={`p-4 rounded-lg shadow-md text-white ${
+                  tx.type === 'buy' ? 'bg-green-600' : 'bg-red-600'
+                }`}
+              >
+                <div className="flex justify-between">
+                  <p className="font-bold capitalize">
+                    {tx.type} - {months[tx.month]}/{tx.period}
+                  </p>
+                  <p className="text-sm">{tx.date}</p>
+                </div>
+                <p>Quantity: {tx.quantity}</p>
+                <p>Price: ${tx.price.toFixed(2)}</p>
+              </div>
+            ))}
+      </div>
     </div>
   )
 }
