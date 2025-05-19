@@ -1,9 +1,9 @@
 'use client'
 
-import { useActionState } from 'react'
-import { useRouter } from 'next/navigation'
 // import toast from 'react-hot-toast'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { useRouter } from 'next/navigation'
+import { useActionState } from 'react'
 
 import { ActionResponse } from '@/app/(auth)/actions/auth'
 import { auth } from '@/lib/firebase'

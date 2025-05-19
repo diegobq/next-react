@@ -1,17 +1,19 @@
 'use client'
 
+// import toast from 'react-hot-toast'
+import clsx from 'clsx'
+import { FC } from 'react'
+
 import Button from '@/app/components/ui/Button'
 import {
   Form,
-  FormGroup,
-  FormLabel,
-  FormInput,
   FormError,
+  FormGroup,
+  FormInput,
+  FormLabel,
 } from '@/app/components/ui/Form'
-// import toast from 'react-hot-toast'
-import clsx from 'clsx'
+
 import { AuthFormProps } from './types'
-import { FC } from 'react'
 
 const AuthForm: FC<AuthFormProps> = ({
   state,

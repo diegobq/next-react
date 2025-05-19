@@ -8,6 +8,7 @@
     "start": "next start",
     "format": "prettier --write .",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "prepare": "husky"
   },
   "dependencies": {
@@ -27,6 +28,8 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
     "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
     "prettier": "3.5.3",

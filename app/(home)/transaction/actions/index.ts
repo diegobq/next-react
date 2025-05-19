@@ -1,1 +1,1 @@
-export { save, get } from './actions'
+export { get, getAll, save } from './actions'

@@ -1,55 +1,37 @@
 'use client'
 
-import { useActionState, useEffect, useState } from 'react'
-import { SelectProps } from './types'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Form } from '@/app/components/ui/Form'
-import { fieldsConfig, months, typesConfig, validTypes } from '../constants'
-import { ActionResponse } from '@/app/types'
-import { save } from '../actions'
+import { useEffect } from 'react'
+
+import { TypeTransaction } from '@/lib/dal/transaction/types'
+import { getCurrentDateInfo } from '@/lib/date'
+
+import { TxForm } from '../components'
+import { typesConfig, validTypes } from '../constants'
 import { TransactionProps } from '../types'
 
-const today = new Date()
-const currentPeriod = today.getFullYear()
-const currentMonth = today.getMonth()
-
-const initialState: ActionResponse<TransactionProps> = {
-  success: false,
-  message: '',
-  errors: undefined,
-}
-
-const selectConfig = (value: number, label: string): SelectProps => ({
-  id: `${value}`,
-  value,
-  label,
-})
-
-const periodsConfig: SelectProps[] = Array.from({ length: 15 }, (_, i) =>
-  selectConfig(2019 + i, `${2019 + i}`)
-)
-
-const monthsConfig: SelectProps[] = Array.from({ length: 12 }, (_, i) =>
-  selectConfig(i, months[i])
-)
+const { currentMonth, currentPeriod, today } = getCurrentDateInfo()
 
 export default function FormPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const typeFromUrl = searchParams.get('type')
-  const validTypeFromUrl =
-    (typeFromUrl && typesConfig[typeFromUrl]?.value) || undefined
+  const typeFromUrl = searchParams.get('type') as TypeTransaction
+  const periodFromUrl = parseInt(searchParams.get('period') || '')
+  const period = isNaN(periodFromUrl) ? currentPeriod : periodFromUrl
+  const validTypeFromUrl: TypeTransaction =
+    typeFromUrl && typesConfig[typeFromUrl]?.value
 
-  const [form, setForm] = useState({
+  const transaction: TransactionProps = {
+    id: undefined,
     type: validTypeFromUrl || validTypes[0],
     date: today.toISOString().split('T')[0],
-    period: currentPeriod,
+    period: period,
     month: currentMonth,
-    quantity: '',
-    price: '',
-  })
+    quantity: 0,
+    price: 0,
+  }
 
-  const { type } = form
+  const { type } = transaction
 
   useEffect(() => {
     if (!validTypeFromUrl) {
@@ -59,175 +41,5 @@ export default function FormPage() {
     }
   }, [type, router, searchParams, validTypeFromUrl])
 
-  const handleType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target
-    const params = new URLSearchParams(searchParams.toString())
-    if (value) {
-      params.set('type', value)
-    } else {
-      params.delete('type')
-    }
-    router.replace(`?${params.toString()}`)
-    handleChange(e)
-  }
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const [, formAction, isPending] = useActionState<
-    ActionResponse<TransactionProps>,
-    FormData
-  >(async (prevState: ActionResponse<TransactionProps>, formData: FormData) => {
-    try {
-      const result = await save(formData)
-
-      // Handle successful submission
-      if (result.success) {
-        // router.push('/transaction')
-        console.log('guardado')
-      }
-
-      return result
-    } catch (err) {
-      return {
-        success: false,
-        message: (err as Error).message || 'An error occurred',
-        errors: undefined,
-      }
-    }
-  }, initialState)
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-      <div className="w-full max-w-md space-y-4">
-        <a
-          href="/transaction"
-          className="inline-flex items-center text-sm text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400"
-        >
-          ← Back to Transactions
-        </a>
-        <Form
-          action={formAction}
-          className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-8 space-y-6 w-full max-w-md"
-        >
-          <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
-            {type === 'buy' && 'Buying transaction'}
-            {type === 'sell' && 'Selling transaction'}
-            {!type && 'Save Data'}
-          </h2>
-
-          <div className="flex flex-col">
-            <label
-              htmlFor="type"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200"
-            >
-              Type
-            </label>
-            <select
-              id="type"
-              name="type"
-              value={type}
-              onChange={handleType}
-              className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-              required
-            >
-              {Object.values(typesConfig).map(({ id, label, value }) => (
-                <option key={id} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col">
-            <label
-              htmlFor="month"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200"
-            >
-              Month
-            </label>
-            <select
-              id="month"
-              name="month"
-              value={form.month}
-              onChange={handleChange}
-              className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-              required
-            >
-              {monthsConfig.map(({ id, label, value }) => (
-                <option key={id} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col">
-            <label
-              htmlFor="period"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200"
-            >
-              Period
-            </label>
-            <select
-              id="period"
-              name="period"
-              value={form.period}
-              onChange={handleChange}
-              className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-              required
-            >
-              {periodsConfig.map(({ id, label, value }) => (
-                <option key={id} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {fieldsConfig.map(({ id, name, type, min, step, required }) => (
-            <div className="flex flex-col" key={id}>
-              <label
-                htmlFor={name}
-                className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200 capitalize"
-              >
-                {name}
-              </label>
-              <input
-                type={type}
-                id={id}
-                name={name}
-                value={form[name as keyof typeof form]}
-                onChange={handleChange}
-                className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-                min={min}
-                step={step}
-                required={!!required}
-              />
-            </div>
-          ))}
-
-          <button
-            type="submit"
-            disabled={isPending}
-            className={`w-full py-2 rounded-md transition text-white
-    ${
-      type === 'buy'
-        ? 'bg-green-600 hover:bg-green-700'
-        : type === 'sell'
-          ? 'bg-red-600 hover:bg-red-700'
-          : 'bg-blue-600 hover:bg-blue-700'
-    }`}
-          >
-            {type === 'buy' && 'Confirm Purchase'}
-            {type === 'sell' && 'Confirm Sale'}
-            {!type && 'Save'}
-          </button>
-        </Form>
-      </div>
-    </div>
-  )
+  return <TxForm tx={transaction} />
 }

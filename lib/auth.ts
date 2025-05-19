@@ -1,5 +1,5 @@
-import { cache } from 'react'
 import { cookies } from 'next/headers'
+import { cache } from 'react'
 
 interface IUser {
   id: string
@@ -58,7 +58,7 @@ export const getSession = cache(async () => {
       error instanceof Error &&
       error.message.includes('During prerendering, `cookies()` rejects')
     ) {
-      console.log(
+      console.error(
         'Cookies not available during prerendering, returning null session'
       )
       return null

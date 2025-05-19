@@ -1,4 +1,4 @@
-import { ITypesConfig } from './new/types'
+import { ITypesConfig } from './types'
 
 export const typesConfig: ITypesConfig = {
   buy: {

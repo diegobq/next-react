@@ -1,9 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { FC } from 'react'
 
 import { AuthFooterProps } from './types'
-import { FC } from 'react'
 
 const AuthFooter: FC<AuthFooterProps> = ({ label, href, linkLabel }) => (
   <div className="mt-6 text-center">

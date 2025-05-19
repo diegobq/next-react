@@ -1,9 +1,11 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
-import { User, onAuthStateChanged, signOut } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
+import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 import { usePathname, useRouter } from 'next/navigation'
+import { createContext, useContext, useEffect, useState } from 'react'
+
+import { LoadingSpinner } from '@/app/components/ui'
+import { auth } from '@/lib/firebase'
 
 import {
   DEFAULT_AUTH_PAGE,
@@ -11,7 +13,6 @@ import {
   REDIRECT_PAGE,
   SKIP_AUTH_PATHNAME,
 } from '../constants'
-import { LoadingSpinner } from '@/app/components/ui'
 import { encodeRedirectPage } from '../redirectPage'
 
 interface AuthContextType {
