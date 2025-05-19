@@ -3,8 +3,6 @@ import { NewTxCta } from './components'
 import { PeriodFilter } from './PeriodFilter'
 import Results from './Results'
 
-export const dynamic = 'force-dynamic'
-
 export default async function TransactionsPage() {
   const { data } = await getAll()
 
