@@ -1,15 +1,20 @@
 import { ITypesConfig } from './types'
 
+export const TxTypes = {
+  BUY: 'buy',
+  SELL: 'sell',
+} as const
+
 export const typesConfig: ITypesConfig = {
   buy: {
-    id: 'buy',
-    label: 'buy',
-    value: 'buy',
+    id: TxTypes.BUY,
+    label: TxTypes.BUY,
+    value: TxTypes.BUY,
   },
   sell: {
-    id: 'sell',
-    label: 'sell',
-    value: 'sell',
+    id: TxTypes.SELL,
+    label: TxTypes.SELL,
+    value: TxTypes.SELL,
   },
 }
 

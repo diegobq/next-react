@@ -1,8 +1,10 @@
 import { Timestamp } from 'firebase-admin/firestore'
 
+import { TxTypes } from '@/app/(home)/transaction/constants'
+
 import { DBProps } from '../types'
 
-export type TypeTransaction = 'buy' | 'sell'
+export type TypeTransaction = (typeof TxTypes)[keyof typeof TxTypes]
 
 export interface TransactionDBProps extends TransactionProps, DBProps {}
 

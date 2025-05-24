@@ -7,7 +7,7 @@ import { Form } from '@/app/components/ui/Form'
 import { ActionResponse } from '@/app/types'
 
 import { save } from '../actions'
-import { fieldsConfig, months } from '../constants'
+import { fieldsConfig, months, TxTypes } from '../constants'
 import { periodOptions } from '../periodOptions'
 import { OptionProps, TransactionProps } from '../types'
 import BackCta from './BackCta'
@@ -32,6 +32,10 @@ const monthsConfig: OptionProps[] = Array.from({ length: 12 }, (_, i) =>
 export default function TxForm(params: TxFormProps) {
   const { tx } = params
   const [form, setForm] = useState(tx)
+  const { type } = form
+  const txActionLabel = form.id ? 'Edit' : 'Confirm'
+  const txTypeLabel = type === TxTypes.BUY ? 'Purchase' : 'Sale'
+  const ctaLabel = `${txActionLabel} ${txTypeLabel}`
 
   const [, formAction, isPending] = useActionState<
     ActionResponse<TransactionProps>,
@@ -55,8 +59,6 @@ export default function TxForm(params: TxFormProps) {
       }
     }
   }, initialState)
-
-  const { type } = form
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -161,9 +163,7 @@ export default function TxForm(params: TxFormProps) {
           : 'bg-blue-600 hover:bg-blue-700'
     }`}
         >
-          {type === 'buy' && 'Confirm Purchase'}
-          {type === 'sell' && 'Confirm Sale'}
-          {!type && 'Save'}
+          {ctaLabel}
         </button>
       </Form>
     </>
