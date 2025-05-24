@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const TransactionSchema = z.object({
   type: z.enum(['buy', 'sell']),
-  date: z.string().transform((val) => new Date(val)),
+  date: z.string(),
   period: z.string().transform((val) => {
     const num = parseInt(val, 10)
     if (!/^\d{4}$/.test(val)) throw new Error('Period must be a 4-digit year')

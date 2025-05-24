@@ -2,14 +2,23 @@
 
 import { useSearchParams } from 'next/navigation'
 
-import { TxCard } from './components'
-import { TransactionProps } from './types'
+import { ActionResponse } from '@/app/types'
 
-export default function Results({ data }: { data?: TransactionProps[] }) {
+import { TransactionProps } from './actions/types'
+import { TxCard } from './components'
+
+export default function Results(response: ActionResponse<TransactionProps[]>) {
   const searchParams = useSearchParams()
   const selectedPeriod = searchParams.get('period')
+  const { error, data } = response
 
-  if (!data) return null
+  if (!data || error) {
+    return (
+      <p className="text-gray-500 dark:text-gray-300 text-center">
+        {response.message}
+      </p>
+    )
+  }
 
   const filteredTransactions = !selectedPeriod
     ? data
@@ -19,7 +28,7 @@ export default function Results({ data }: { data?: TransactionProps[] }) {
     <div className="w-full max-w-2xl space-y-4">
       {!filteredTransactions?.length && (
         <p className="text-gray-500 dark:text-gray-300 text-center">
-          No transactions found
+          No filtered transactions found
         </p>
       )}
       {!!filteredTransactions?.length &&

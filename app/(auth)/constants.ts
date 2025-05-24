@@ -2,7 +2,7 @@ import { SkipAuthPathnames } from './types'
 
 const SIGNUP = '/signup'
 const SIGNIN = '/signin'
-export const TRANSACTION = '/transaction'
+export const TRANSACTION_PAGE = '/transaction'
 export const DEFAULT_AUTH_PAGE = SIGNIN
 export const HOME_PAGE = '/'
 export const REDIRECT_PAGE = 'redirect'

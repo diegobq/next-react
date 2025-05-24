@@ -1,28 +1,34 @@
 import { Timestamp } from 'firebase-admin/firestore'
 
+import { TransactionProps } from '@/app/(home)/transaction/actions/types'
 import { TxTypes } from '@/app/(home)/transaction/constants'
 
 import { DBProps } from '../types'
 
 export type TypeTransaction = (typeof TxTypes)[keyof typeof TxTypes]
 
-export interface TransactionDBProps extends TransactionProps, DBProps {}
+type StatusType = 'created' | 'deleted'
 
-export interface TransactionProps {
-  id?: string
-  type: TypeTransaction
-  period: number
-  month: number
+export interface TransactionDBProps
+  extends Omit<TransactionProps, 'date'>,
+    DBProps {
   date: Timestamp
-  quantity: number
-  price: number
+  status: StatusType
 }
+
+export type SaveType = (
+  id: string,
+  status: StatusType,
+  tx?: TransactionProps
+) => Promise<void>
 
 export type SaveTransaction = (
   id: string,
-  props: TransactionDBProps
+  props: TransactionProps
 ) => Promise<void>
 export type GetTransactions = () => Promise<TransactionProps[]>
 export type GetTransaction = (
   id: string
 ) => Promise<TransactionProps | undefined>
+
+export type TransformTxType = (props: TransactionDBProps) => TransactionProps

@@ -4,14 +4,14 @@
 import clsx from 'clsx'
 import { FC } from 'react'
 
-import Button from '@/app/components/ui/Button'
 import {
+  Button,
   Form,
   FormError,
   FormGroup,
   FormInput,
   FormLabel,
-} from '@/app/components/ui/Form'
+} from '@/app/components/ui'
 
 import { AuthFormProps } from './types'
 

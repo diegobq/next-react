@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { TRANSACTION } from '@/app/(auth)/constants'
+import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
 
 import { months } from '../constants'
 import { TxCardProps } from './types'
@@ -14,7 +14,7 @@ export default function TxCard(params: TxCardProps) {
         tx.type === 'buy' ? 'bg-green-600' : 'bg-red-600'
       }`}
     >
-      <Link href={`${TRANSACTION}/${tx.id}?period=${tx.period}`}>
+      <Link href={`${TRANSACTION_PAGE}/${tx.id}?period=${tx.period}`}>
         <div className="flex justify-between">
           <p className="font-bold capitalize">
             {months[tx.month]}/{tx.period}

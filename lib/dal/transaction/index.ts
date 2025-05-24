@@ -1,1 +1,6 @@
-export { getTransactions, saveTransaction } from './transaction'
+export {
+  getAvailableTxs,
+  getTransaction,
+  removeTx,
+  saveTransaction,
+} from './transaction'

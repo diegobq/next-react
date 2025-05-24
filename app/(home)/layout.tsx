@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { Signout } from '@/app/(auth)/components'
-import { TRANSACTION } from '@/app/(auth)/constants'
+import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
 
 export default async function RootLayout({
   children,
@@ -13,7 +13,7 @@ export default async function RootLayout({
       <header className="border-b border-gray-200 dark:border-dark-border-subtle bg-gray dark:bg-dark-base">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-8">
-            <Link href={TRANSACTION} className="text-xl font-bold">
+            <Link href={TRANSACTION_PAGE} className="text-xl font-bold">
               Authentication
             </Link>
           </div>

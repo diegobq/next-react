@@ -1,19 +1,24 @@
+import { Timestamp } from 'firebase-admin/firestore'
+
+import { TransactionProps } from '@/app/(home)/transaction/actions/types'
 import { firestore } from '@/lib/firebaseAdmin'
 
 import {
   GetTransaction,
   GetTransactions,
   SaveTransaction,
+  SaveType,
   TransactionDBProps,
-  TransactionProps,
+  TransformTxType,
 } from './types'
 
 const TRANSACTION = 'transaction'
 
-export const saveTransaction: SaveTransaction = async (id, transaction) => {
+const save: SaveType = async (id, status, tx) => {
   const now = new Date()
   const myCollectionRef = firestore.collection(TRANSACTION)
   if (id) {
+    if (!tx) return
     const doc = await myCollectionRef.doc(id).get()
 
     if (!doc.exists) return
@@ -24,7 +29,9 @@ export const saveTransaction: SaveTransaction = async (id, transaction) => {
 
     await doc.ref.set(
       {
-        ...transaction,
+        ...tx,
+        date: Timestamp.fromDate(new Date(tx.date)),
+        status,
         createdAt: data.createdAt,
         updatedAt: now,
       },
@@ -33,19 +40,21 @@ export const saveTransaction: SaveTransaction = async (id, transaction) => {
   } else {
     const newDocRef = myCollectionRef.doc()
     await newDocRef.create({
-      ...transaction,
+      ...tx,
+      status,
       createdAt: now,
       updatedAt: now,
     })
   }
 }
 
-const removeFields = (tx: TransactionDBProps): TransactionProps => {
-  delete tx.createdAt
-  delete tx.updatedAt
-
-  return tx
-}
+const transformTx: TransformTxType = ({
+  date,
+  status: _status,
+  createdAt: _createdAt,
+  updatedAt: _updatedAt,
+  ...rest
+}) => ({ ...rest, date: date?.toDate().toISOString().split('T')[0] })
 
 export const getTransaction: GetTransaction = async (id) => {
   const doc = await firestore.collection(TRANSACTION).doc(id).get()
@@ -55,7 +64,7 @@ export const getTransaction: GetTransaction = async (id) => {
   const transaction = doc.data() as TransactionDBProps
 
   if (!transaction) return
-  const data = removeFields(transaction)
+  const data = transformTx(transaction)
 
   return {
     id: doc.id,
@@ -63,18 +72,30 @@ export const getTransaction: GetTransaction = async (id) => {
   }
 }
 
-export const getTransactions: GetTransactions = async () => {
-  const snapshot = await firestore.collection(TRANSACTION).get()
+export const saveTransaction: SaveTransaction = async (id, tx) => {
+  await save(id, 'created', tx)
+}
+
+export const removeTx = async (id: string) => {
+  await save(id, 'deleted')
+}
+
+export const getAvailableTxs: GetTransactions = async () => {
+  const query = firestore
+    .collection(TRANSACTION)
+    .where('status', '!=', 'deleted')
+  const snapshot = await query.get()
 
   return snapshot.docs.reduce<TransactionProps[]>((acc, doc) => {
     const data = doc.data() as TransactionDBProps
 
-    if (!data) return acc
+    if (data) {
+      acc.push({
+        ...transformTx(data),
+        id: doc.id,
+      })
+    }
 
-    acc.push({
-      ...removeFields(data),
-      id: doc.id,
-    })
     return acc
   }, [])
 }

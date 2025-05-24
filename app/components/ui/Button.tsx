@@ -8,7 +8,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
 }
 
-export default function Button({
+export function Button({
   className,
   children,
   variant = 'primary',

@@ -1,19 +1,15 @@
 'use server'
 
-import { Timestamp } from 'firebase-admin/firestore'
-
 import { ActionResponse } from '@/app/types'
-import { getTransactions, saveTransaction } from '@/lib/dal/transaction'
-import { getTransaction } from '@/lib/dal/transaction/transaction'
+import {
+  getAvailableTxs,
+  getTransaction,
+  removeTx,
+  saveTransaction,
+} from '@/lib/dal/transaction'
 
-import { TransactionProps } from '../types'
 import { TransactionSchema } from './schema'
-import { GetTxDataFromTxDBType } from './types'
-
-const getTxDataFromTxDB: GetTxDataFromTxDBType = ({ date, ...rest }) => ({
-  ...rest,
-  date: date?.toDate().toISOString().split('T')[0],
-})
+import { TransactionProps } from './types'
 
 export async function save(
   formData: FormData
@@ -28,11 +24,7 @@ export async function save(
       price: formData.get('price') as string,
     }
 
-    const {
-      data: transaction,
-      success,
-      error,
-    } = TransactionSchema.safeParse(data)
+    const { data: tx, success, error } = TransactionSchema.safeParse(data)
 
     if (!success) {
       return {
@@ -42,10 +34,7 @@ export async function save(
       }
     }
 
-    await saveTransaction(formData.get('id') as string, {
-      ...transaction,
-      date: Timestamp.fromDate(transaction.date),
-    })
+    await saveTransaction(formData.get('id') as string, tx)
 
     return {
       success: true,
@@ -72,7 +61,7 @@ export async function get(
       }
     }
 
-    const transaction = await getTransaction(id as string)
+    const transaction = await getTransaction(id)
 
     if (!transaction) {
       return {
@@ -83,7 +72,7 @@ export async function get(
     }
 
     return {
-      data: getTxDataFromTxDB(transaction),
+      data: transaction,
       success: true,
       message: 'get Transaction',
     }
@@ -97,18 +86,32 @@ export async function get(
   }
 }
 
-export async function getAll(): Promise<ActionResponse<TransactionProps[]>> {
+export async function remove(
+  id: string
+): Promise<ActionResponse<TransactionProps>> {
   try {
-    const transactions = await getTransactions()
-
-    const data = transactions.reduce<TransactionProps[]>((accummulator, tx) => {
-      accummulator.push(getTxDataFromTxDB(tx))
-
-      return accummulator
-    }, [])
+    await removeTx(id)
 
     return {
-      data,
+      success: true,
+      message: 'removed Transaction',
+    }
+  } catch (error) {
+    console.error('remove transaction error:', error)
+    return {
+      success: false,
+      message: 'An error occurred while removing the transaction',
+      error: 'Failed to remove transaction',
+    }
+  }
+}
+
+export async function getAll(): Promise<ActionResponse<TransactionProps[]>> {
+  try {
+    const transactions = await getAvailableTxs()
+
+    return {
+      data: transactions,
       success: true,
       message: 'Transactions saved',
     }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 import { periodOptions } from './periodOptions'
 
@@ -9,16 +10,22 @@ export function PeriodFilter() {
   const searchParams = useSearchParams()
 
   const selected = searchParams.get('period') || ''
+  const [period, setPeriod] = useState(selected)
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value
+  useEffect(() => {
+    if (period === selected) return
+
     const params = new URLSearchParams(searchParams.toString())
-    if (value) {
-      params.set('period', value)
+    if (period) {
+      params.set('period', period)
     } else {
       params.delete('period')
     }
     router.replace(`?${params.toString()}`)
+  }, [period, router, searchParams, selected])
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPeriod(e.target.value)
   }
 
   return (
@@ -26,7 +33,7 @@ export function PeriodFilter() {
       <select
         id="period"
         name="period"
-        value={selected}
+        value={period}
         onChange={handleChange}
         className="w-full border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
       >

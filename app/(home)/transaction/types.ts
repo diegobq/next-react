@@ -1,15 +1,5 @@
 import { TypeTransaction } from '@/lib/dal/transaction/types'
 
-export interface TransactionProps {
-  id?: string
-  type: TypeTransaction
-  period: number
-  month: number
-  date: string
-  quantity: number
-  price: number
-}
-
 export interface OptionProps {
   id: string
   value: number

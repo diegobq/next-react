@@ -1,15 +1,18 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useActionState, useState } from 'react'
 import toast from 'react-hot-toast'
 
-import { Form } from '@/app/components/ui/Form'
+import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
+import { Button, Form } from '@/app/components/ui'
 import { ActionResponse } from '@/app/types'
 
-import { save } from '../actions'
+import { remove, save } from '../actions'
+import { TransactionProps } from '../actions/types'
 import { fieldsConfig, months, TxTypes } from '../constants'
 import { periodOptions } from '../periodOptions'
-import { OptionProps, TransactionProps } from '../types'
+import { OptionProps } from '../types'
 import BackCta from './BackCta'
 import { TxFormProps } from './types'
 
@@ -30,12 +33,45 @@ const monthsConfig: OptionProps[] = Array.from({ length: 12 }, (_, i) =>
 )
 
 export default function TxForm(params: TxFormProps) {
+  const router = useRouter()
+  const [isRemoving, setIsRemoving] = useState(false)
   const { tx } = params
   const [form, setForm] = useState(tx)
   const { type } = form
-  const txActionLabel = form.id ? 'Edit' : 'Confirm'
+
+  const isBuying = type === TxTypes.BUY
+  const isEditing = !!form.id
+  const txActionLabel = isEditing ? 'Edit' : 'Confirm'
   const txTypeLabel = type === TxTypes.BUY ? 'Purchase' : 'Sale'
   const ctaLabel = `${txActionLabel} ${txTypeLabel}`
+  const removeLabel = `Remove ${txTypeLabel}`
+  const returnURL = `${TRANSACTION_PAGE}?period=${form.period}`
+
+  const onRemove = async () => {
+    if (!form.id) return
+    if (
+      !window.confirm(
+        `Are you sure you want to remove this ${txTypeLabel.toLowerCase()}? This action cannot be undone.`
+      )
+    ) {
+      return
+    }
+
+    setIsRemoving(true)
+    try {
+      const result = await remove(form.id)
+      if (result.success) {
+        toast.success(result.message)
+        router.push(returnURL)
+      } else {
+        toast.error(result.message || 'Failed to remove transaction.')
+      }
+    } catch (error) {
+      toast.error((error as Error).message || 'An unexpected error occurred.')
+    } finally {
+      setIsRemoving(false)
+    }
+  }
 
   const [, formAction, isPending] = useActionState<
     ActionResponse<TransactionProps>,
@@ -46,6 +82,7 @@ export default function TxForm(params: TxFormProps) {
 
       if (result.success) {
         toast.success(result.message)
+        router.push(returnURL)
       } else {
         toast.error(result.message)
       }
@@ -59,6 +96,7 @@ export default function TxForm(params: TxFormProps) {
       }
     }
   }, initialState)
+  const disabled = isPending || isRemoving
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -151,20 +189,27 @@ export default function TxForm(params: TxFormProps) {
           </div>
         ))}
 
-        <button
+        <Button
           type="submit"
-          disabled={isPending}
-          className={`w-full py-2 rounded-md transition text-white
-    ${
-      type === 'buy'
-        ? 'bg-green-600 hover:bg-green-700'
-        : type === 'sell'
-          ? 'bg-red-600 hover:bg-red-700'
-          : 'bg-blue-600 hover:bg-blue-700'
-    }`}
+          variant={isBuying ? 'primary' : 'danger'}
+          disabled={disabled}
+          isLoading={isPending}
+          className="w-full py-1"
         >
           {ctaLabel}
-        </button>
+        </Button>
+        {isEditing && (
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={disabled}
+            isLoading={isRemoving}
+            onClick={onRemove}
+            className="w-full py-1"
+          >
+            {removeLabel}
+          </Button>
+        )}
       </Form>
     </>
   )

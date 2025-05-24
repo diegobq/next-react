@@ -1,6 +1,6 @@
 import { TypeTransaction } from '@/lib/dal/transaction/types'
 
-import { TransactionProps } from '../types'
+import { TransactionProps } from '../actions/types'
 
 export interface BackCtaProps {
   period: number
