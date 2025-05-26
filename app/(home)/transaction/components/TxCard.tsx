@@ -1,19 +1,23 @@
 import Link from 'next/link'
 
 import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
+import { cn } from '@/lib/utils'
 
 import { months } from '../constants'
 import { TxCardProps } from './types'
 
+const variants = {
+  primary: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800',
+  danger: 'bg-red-600 text-white hover:bg-red-700',
+}
+
 export default function TxCard(params: TxCardProps) {
   const { tx } = params
+  const baseStyles = 'p-4 rounded-lg shadow-md text-white'
+  const variant = tx.type == 'buy' ? 'primary' : 'danger'
 
   return (
-    <div
-      className={`p-4 rounded-lg shadow-md text-white ${
-        tx.type === 'buy' ? 'bg-green-600' : 'bg-red-600'
-      }`}
-    >
+    <div className={cn(baseStyles, variants[variant])}>
       <Link href={`${TRANSACTION_PAGE}/${tx.id}?period=${tx.period}`}>
         <div className="flex justify-between">
           <p className="font-bold capitalize">

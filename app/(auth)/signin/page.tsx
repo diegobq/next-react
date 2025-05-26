@@ -1,9 +1,9 @@
 'use client'
 
-// import toast from 'react-hot-toast'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { useActionState } from 'react'
+import toast from 'react-hot-toast'
 
 import { ActionResponse } from '@/app/types'
 import { auth } from '@/lib/firebase'
@@ -24,7 +24,7 @@ const initialState: ActionResponse = {
   errors: undefined,
 }
 
-export default function SignUpPage() {
+export default function SignInPage() {
   const router = useRouter()
 
   const [state, formAction, isPending] = useActionState<
@@ -48,7 +48,7 @@ export default function SignUpPage() {
         }
       }
 
-      // toast.success('Account created successfully')
+      toast.success('Signed in successfully!')
       const urlParams = new URLSearchParams(window.location.search)
       const redirectPage = urlParams.get(REDIRECT_PAGE)
 

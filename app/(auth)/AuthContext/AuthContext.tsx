@@ -14,12 +14,7 @@ import {
   SKIP_AUTH_PATHNAME,
 } from '../constants'
 import { encodeRedirectPage } from '../redirectPage'
-
-interface AuthContextType {
-  user: User | null
-  loading: boolean
-  logout: () => Promise<void>
-}
+import { AuthContextType } from './types'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
