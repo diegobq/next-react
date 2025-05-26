@@ -1,4 +1,4 @@
-import { ActionResponse } from '@/app/(auth)/actions/auth'
+import { ActionResponse } from '@/app/types'
 
 export interface AuthFormProps {
   state?: ActionResponse

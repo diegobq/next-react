@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
+import { ActionResponse } from '@/app/types'
 import {
   createSession,
   createUser,
@@ -33,13 +34,6 @@ const SignUpSchema = z
 
 export type SignInData = z.infer<typeof SignInSchema>
 export type SignUpData = z.infer<typeof SignUpSchema>
-
-export type ActionResponse = {
-  success: boolean
-  message: string
-  errors?: Record<string, string[]>
-  error?: string
-}
 
 export async function signIn(formData: FormData): Promise<ActionResponse> {
   try {

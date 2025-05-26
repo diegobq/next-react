@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { useActionState } from 'react'
 
-import { ActionResponse } from '@/app/(auth)/actions/auth'
+import { ActionResponse } from '@/app/types'
 import { auth } from '@/lib/firebase'
 
 import {
