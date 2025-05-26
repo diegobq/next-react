@@ -18,7 +18,6 @@ const save: SaveType = async (id, status, tx) => {
   const now = new Date()
   const myCollectionRef = firestore.collection(TRANSACTION)
   if (id) {
-    if (!tx) return
     const doc = await myCollectionRef.doc(id).get()
 
     if (!doc.exists) return
@@ -29,22 +28,28 @@ const save: SaveType = async (id, status, tx) => {
 
     await doc.ref.set(
       {
-        ...tx,
-        date: Timestamp.fromDate(new Date(tx.date)),
+        ...(tx || data),
         status,
+        date: tx ? Timestamp.fromDate(new Date(tx.date)) : data.date,
         createdAt: data.createdAt,
         updatedAt: now,
       },
       { merge: true }
     )
+    return transformTx(data)
   } else {
+    if (!tx) return
+
     const newDocRef = myCollectionRef.doc()
     await newDocRef.create({
       ...tx,
       status,
+      date: Timestamp.fromDate(new Date(tx.date)),
       createdAt: now,
       updatedAt: now,
     })
+
+    return tx
   }
 }
 
@@ -72,18 +77,18 @@ export const getTransaction: GetTransaction = async (id) => {
   }
 }
 
-export const saveTransaction: SaveTransaction = async (id, tx) => {
+export const saveTransaction: SaveTransaction = async (id, tx) =>
   await save(id, 'created', tx)
-}
 
-export const removeTx = async (id: string) => {
-  await save(id, 'deleted')
-}
+export const removeTx = async (id: string) => await save(id, 'deleted')
 
 export const getAvailableTxs: GetTransactions = async () => {
   const query = firestore
     .collection(TRANSACTION)
     .where('status', '!=', 'deleted')
+    .orderBy('period', 'desc')
+    .orderBy('month', 'desc')
+    .orderBy('date', 'desc')
   const snapshot = await query.get()
 
   return snapshot.docs.reduce<TransactionProps[]>((acc, doc) => {

@@ -20,12 +20,12 @@ export type SaveType = (
   id: string,
   status: StatusType,
   tx?: TransactionProps
-) => Promise<void>
+) => Promise<TransactionProps | undefined>
 
 export type SaveTransaction = (
   id: string,
   props: TransactionProps
-) => Promise<void>
+) => Promise<TransactionProps | undefined>
 export type GetTransactions = () => Promise<TransactionProps[]>
 export type GetTransaction = (
   id: string

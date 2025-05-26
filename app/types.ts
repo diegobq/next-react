@@ -1,4 +1,4 @@
-export type ActionResponse<Z> = {
+export type ActionResponse<Z = void> = {
   data?: Z
   success: boolean
   message: string

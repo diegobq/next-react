@@ -1,6 +1,5 @@
-import Link from 'next/link'
-
 import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
+import { Link } from '@/app/components/ui'
 
 import { BackCtaProps } from './types'
 

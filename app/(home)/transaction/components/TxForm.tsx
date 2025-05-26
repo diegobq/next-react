@@ -1,10 +1,8 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useActionState, useState } from 'react'
 import toast from 'react-hot-toast'
 
-import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
 import { Button, Form } from '@/app/components/ui'
 import { ActionResponse } from '@/app/types'
 
@@ -33,7 +31,6 @@ const monthsConfig: OptionProps[] = Array.from({ length: 12 }, (_, i) =>
 )
 
 export default function TxForm(params: TxFormProps) {
-  const router = useRouter()
   const [isRemoving, setIsRemoving] = useState(false)
   const { tx } = params
   const [form, setForm] = useState(tx)
@@ -45,7 +42,6 @@ export default function TxForm(params: TxFormProps) {
   const txTypeLabel = type === TxTypes.BUY ? 'Purchase' : 'Sale'
   const ctaLabel = `${txActionLabel} ${txTypeLabel}`
   const removeLabel = `Remove ${txTypeLabel}`
-  const returnURL = `${TRANSACTION_PAGE}?period=${form.period}`
 
   const onRemove = async () => {
     if (!form.id) return
@@ -58,43 +54,24 @@ export default function TxForm(params: TxFormProps) {
     }
 
     setIsRemoving(true)
-    try {
-      const result = await remove(form.id)
-      if (result.success) {
-        toast.success(result.message)
-        router.push(returnURL)
-      } else {
-        toast.error(result.message || 'Failed to remove transaction.')
-      }
-    } catch (error) {
-      toast.error((error as Error).message || 'An unexpected error occurred.')
-    } finally {
-      setIsRemoving(false)
+    const result = await remove(form.id)
+    if (result.success === false) {
+      toast.error(result.message || 'Failed to remove transaction.')
     }
+    setIsRemoving(false)
   }
 
   const [, formAction, isPending] = useActionState<
     ActionResponse<TransactionProps>,
     FormData
-  >(async (prevState: ActionResponse<TransactionProps>, formData: FormData) => {
-    try {
-      const result = await save(formData)
+  >(async (_, formData) => {
+    const result = await save(formData)
 
-      if (result.success) {
-        toast.success(result.message)
-        router.push(returnURL)
-      } else {
-        toast.error(result.message)
-      }
-
-      return result
-    } catch (err) {
-      return {
-        success: false,
-        message: (err as Error).message || 'An error occurred',
-        errors: undefined,
-      }
+    if (result.success === false) {
+      toast.error(result.message)
     }
+
+    return result
   }, initialState)
   const disabled = isPending || isRemoving
 

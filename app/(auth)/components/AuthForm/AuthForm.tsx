@@ -69,7 +69,12 @@ const AuthForm: FC<AuthFormProps> = ({
     </FormGroup>
 
     <div>
-      <Button type="submit" className="w-full" isLoading={isPending}>
+      <Button
+        variant="secondary"
+        type="submit"
+        className="w-full"
+        isLoading={isPending}
+      >
         {ctaLabel}
       </Button>
     </div>

@@ -32,11 +32,9 @@ export default function Results(response: ActionResponse<TransactionProps[]>) {
         </p>
       )}
       {!!filteredTransactions?.length &&
-        (filteredTransactions as TransactionProps[])
-          .sort(({ period: t1p, month: t1m }, { period: t2p, month: t2m }) =>
-            t1p === t2p ? t2m - t1m : t2p - t1p
-          )
-          .map((tx, index) => <TxCard key={index} tx={tx} />)}
+        (filteredTransactions as TransactionProps[]).map((tx, index) => (
+          <TxCard key={index} tx={tx} />
+        ))}
     </div>
   )
 }
