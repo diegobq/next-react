@@ -10,3 +10,5 @@ export const REDIRECT_PAGE = 'redirect'
 export const SKIP_AUTH_PATHNAME: SkipAuthPathnames = {}
 SKIP_AUTH_PATHNAME[SIGNIN_PAGE] = true
 SKIP_AUTH_PATHNAME[SIGNUP] = true
+
+export const FIREBASE_AUTH_USER_DISABLED = 'auth/user-disabled'

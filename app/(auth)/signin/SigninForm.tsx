@@ -10,7 +10,11 @@ import { auth } from '@/lib/firebase'
 
 import { createSession } from '../actions'
 import { AuthForm } from '../components'
-import { HOME_PAGE, REDIRECT_PAGE } from '../constants'
+import {
+  FIREBASE_AUTH_USER_DISABLED,
+  HOME_PAGE,
+  REDIRECT_PAGE,
+} from '../constants'
 import { decodeRedirectPage } from '../redirectPage'
 
 const initialState: ActionResponse = {
@@ -49,11 +53,16 @@ export default function SigninForm() {
           message: 'Signed in successfully!',
         }
       })
-      .catch(() => {
-        toast.error('Signin failed')
+      .catch((error) => {
+        const message =
+          error.code === FIREBASE_AUTH_USER_DISABLED
+            ? 'Your account is disabled.'
+            : 'Signin failed'
+
+        toast.error(message)
         return {
           success: false,
-          message: 'Signin failed. Check your data and try again.',
+          message,
         }
       })
   }, initialState)
