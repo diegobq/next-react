@@ -1,11 +1,11 @@
 import { Timestamp } from 'firebase-admin/firestore'
 
 import { TransactionProps } from '@/app/(home)/transaction/actions/types'
+import { getAuthenticatedUserServer } from '@/lib/auth'
 import { firestore } from '@/lib/firebaseAdmin'
 
 import {
   GetTransaction,
-  GetTransactions,
   SaveTransaction,
   SaveType,
   TransactionDBProps,
@@ -15,6 +15,12 @@ import {
 const TRANSACTION = 'transaction'
 
 const save: SaveType = async (id, status, tx) => {
+  const authenticatedUser = await getAuthenticatedUserServer()
+  if (!authenticatedUser) return
+
+  const { uid: userStringId } = authenticatedUser
+  const uid = firestore.doc(`users/${userStringId}`)
+
   const now = new Date()
   const myCollectionRef = firestore.collection(TRANSACTION)
   if (id) {
@@ -33,10 +39,11 @@ const save: SaveType = async (id, status, tx) => {
         date: tx ? Timestamp.fromDate(new Date(tx.date)) : data.date,
         createdAt: data.createdAt,
         updatedAt: now,
+        uid,
       },
       { merge: true }
     )
-    return transformTx(data)
+    return transformTx(data, id)
   } else {
     if (!tx) return
 
@@ -47,19 +54,22 @@ const save: SaveType = async (id, status, tx) => {
       date: Timestamp.fromDate(new Date(tx.date)),
       createdAt: now,
       updatedAt: now,
+      uid,
     })
 
     return tx
   }
 }
 
-const transformTx: TransformTxType = ({
-  date,
-  status: _status,
-  createdAt: _createdAt,
-  updatedAt: _updatedAt,
-  ...rest
-}) => ({ ...rest, date: date?.toDate().toISOString().split('T')[0] })
+const transformTx: TransformTxType = (tx, id) => ({
+  id,
+  type: tx.type,
+  period: tx.period,
+  month: tx.month,
+  quantity: tx.quantity,
+  price: tx.price,
+  date: tx.date?.toDate().toISOString().split('T')[0],
+})
 
 export const getTransaction: GetTransaction = async (id) => {
   const doc = await firestore.collection(TRANSACTION).doc(id).get()
@@ -69,12 +79,8 @@ export const getTransaction: GetTransaction = async (id) => {
   const transaction = doc.data() as TransactionDBProps
 
   if (!transaction) return
-  const data = transformTx(transaction)
 
-  return {
-    id: doc.id,
-    ...data,
-  }
+  return transformTx(transaction, id)
 }
 
 export const saveTransaction: SaveTransaction = async (id, tx) =>
@@ -82,9 +88,12 @@ export const saveTransaction: SaveTransaction = async (id, tx) =>
 
 export const removeTx = async (id: string) => await save(id, 'deleted')
 
-export const getAvailableTxs: GetTransactions = async () => {
+export const getAvailableTxs = async (
+  uid: string
+): Promise<TransactionProps[]> => {
   const query = firestore
     .collection(TRANSACTION)
+    .where('uid', '==', firestore.doc(`users/${uid}`))
     .where('status', '!=', 'deleted')
     .orderBy('period', 'desc')
     .orderBy('month', 'desc')
@@ -95,10 +104,7 @@ export const getAvailableTxs: GetTransactions = async () => {
     const data = doc.data() as TransactionDBProps
 
     if (data) {
-      acc.push({
-        ...transformTx(data),
-        id: doc.id,
-      })
+      acc.push(transformTx(data, doc.id))
     }
 
     return acc

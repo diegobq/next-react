@@ -48,6 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     await signOut(auth)
+    // await deleteSessionCookie()
     router.push(DEFAULT_AUTH_PAGE)
   }
 

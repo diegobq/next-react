@@ -1,22 +1,13 @@
+'use client'
+
 import { Suspense } from 'react'
 
-import { getAll } from './actions'
 import { NewTxCta, ResultsSkeleton } from './components'
 import { TxTypes } from './constants'
 import { PeriodFilter } from './PeriodFilter'
 import Results from './Results'
 
 // export const dynamic = 'force-dynamic'
-
-async function TransactionContent() {
-  const response = await getAll()
-
-  return (
-    <>
-      <Results {...response} />
-    </>
-  )
-}
 
 export default function TransactionsPage() {
   return (
@@ -32,7 +23,7 @@ export default function TransactionsPage() {
       <PeriodFilter />
 
       <Suspense fallback={<ResultsSkeleton />}>
-        <TransactionContent />
+        <Results />
       </Suspense>
     </div>
   )

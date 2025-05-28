@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 
 import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
 import { ActionResponse } from '@/app/types'
+import { getAuthenticatedUserServer } from '@/lib/auth/auth'
 import {
   getAvailableTxs,
   getTransaction,
@@ -118,7 +119,16 @@ export async function remove(id: string): Promise<ActionResponse> {
 
 export async function getAll(): Promise<ActionResponse<TransactionProps[]>> {
   try {
-    const transactions = await getAvailableTxs()
+    const user = await getAuthenticatedUserServer()
+    if (!user) {
+      return {
+        success: false,
+        message: 'Unauthorized',
+        error: 'Unauthorized',
+      }
+    }
+
+    const transactions = await getAvailableTxs(user.uid)
 
     return {
       data: transactions,

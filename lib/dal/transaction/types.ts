@@ -14,6 +14,7 @@ export interface TransactionDBProps
     DBProps {
   date: Timestamp
   status: StatusType
+  uid: string
 }
 
 export type SaveType = (
@@ -26,9 +27,11 @@ export type SaveTransaction = (
   id: string,
   props: TransactionProps
 ) => Promise<TransactionProps | undefined>
-export type GetTransactions = () => Promise<TransactionProps[]>
 export type GetTransaction = (
   id: string
 ) => Promise<TransactionProps | undefined>
 
-export type TransformTxType = (props: TransactionDBProps) => TransactionProps
+export type TransformTxType = (
+  props: TransactionDBProps,
+  id: string
+) => TransactionProps
