@@ -12,18 +12,20 @@ const variants = {
 }
 
 export default function TxCard(params: TxCardProps) {
-  const { tx } = params
+  const { tx, showPeriod } = params
   const baseStyles = 'p-4 rounded-lg shadow-md text-white'
   const variant = tx.type == 'buy' ? 'primary' : 'danger'
+  const period = showPeriod ? `/${tx.period}` : ''
 
   return (
     <div className={cn(baseStyles, variants[variant])}>
       <Link href={`${TRANSACTION_PAGE}/${tx.id}?period=${tx.period}`}>
         <div className="flex justify-between">
-          <p className="font-bold capitalize">
-            {months[tx.month]}/{tx.period}
-          </p>
           <p className="text-sm">{tx.date}</p>
+          <p className="font-bold capitalize">
+            {months[tx.month]}
+            {period}
+          </p>
         </div>
         <p>Quantity: {tx.quantity}</p>
         <p>Price: ${tx.price.toFixed(2)}</p>

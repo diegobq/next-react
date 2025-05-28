@@ -12,6 +12,7 @@ export interface NewCtaProps {
 
 export interface TxCardProps {
   tx: TransactionProps
+  showPeriod: boolean
 }
 
 export interface TxFormProps {

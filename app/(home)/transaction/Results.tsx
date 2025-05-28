@@ -1,14 +1,22 @@
+'use client'
+
+import { useSearchParams } from 'next/navigation'
+import { Suspense, useMemo } from 'react'
+
 import { getAll } from './actions'
-import { TxResults } from './components'
+import { ResultsSkeleton, TxResults } from './components'
 
-export default async function Results() {
-  const { data, error, success } = await getAll()
+export default function Results() {
+  const searchParams = useSearchParams()
+  const selectedPeriod = searchParams.get('period') || undefined
 
-  if (!success || !data || error) {
-    return (
-      <p className="text-gray-500 dark:text-gray-300 text-center">{error}</p>
-    )
-  }
+  const response = useMemo(async () => {
+    return await getAll()
+  }, [])
 
-  return <TxResults data={data} />
+  return (
+    <Suspense fallback={<ResultsSkeleton />}>
+      <TxResults response={response} selectedPeriod={selectedPeriod} />
+    </Suspense>
+  )
 }
