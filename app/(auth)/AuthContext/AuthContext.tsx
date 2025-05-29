@@ -1,6 +1,6 @@
 'use client'
 
-import { onAuthStateChanged, signOut, User } from 'firebase/auth'
+import { onAuthStateChanged, User } from 'firebase/auth'
 import { usePathname, useRouter } from 'next/navigation'
 import { createContext, useContext, useEffect, useState } from 'react'
 
@@ -46,18 +46,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe()
   }, [pathname, skipAuthentication, router])
 
-  const logout = async () => {
-    await signOut(auth)
-    // await deleteSessionCookie()
-    router.push(DEFAULT_AUTH_PAGE)
-  }
-
   if (loading || (!user && !skipAuthentication)) {
     return <LoadingSpinner />
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
+    <AuthContext.Provider value={{ user, loading }}>
       {children}
     </AuthContext.Provider>
   )
