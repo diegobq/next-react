@@ -1,9 +1,7 @@
-import { NewTxCta } from './components'
-import { TxTypes } from './constants'
-import { PeriodFilter } from './PeriodFilter'
-import Results from './Results'
+import { TxTypes } from '../constants'
+import { NewTxCta, PeriodFilter, Results } from './components'
 
-// export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic'
 
 export default function TransactionsPage() {
   return (

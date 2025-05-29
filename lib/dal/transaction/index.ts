@@ -2,5 +2,5 @@ export {
   getAvailableTxs,
   getTransaction,
   removeTx,
-  saveTransaction,
+  saveTx,
 } from './transaction'

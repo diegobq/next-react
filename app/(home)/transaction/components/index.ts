@@ -1,5 +1,2 @@
 export { default as BackCta } from './BackCta'
-export { default as NewTxCta } from './NewTxCta/NewTxCta'
-export { default as ResultsSkeleton } from './ResultsSkeleton'
 export { default as TxForm } from './TxForm'
-export { default as TxResults } from './TxResults'

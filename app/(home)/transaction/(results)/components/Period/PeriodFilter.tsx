@@ -29,7 +29,7 @@ export function PeriodFilter() {
   }
 
   return (
-    <div className="w-full max-w-md mb-6">
+    <div className="mb-6">
       <select
         id="period"
         name="period"

@@ -1,4 +1,4 @@
-export default async function TransactionsLayout({
+export default async function ResultsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode

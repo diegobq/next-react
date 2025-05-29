@@ -83,10 +83,9 @@ export const getTransaction: GetTransaction = async (id) => {
   return transformTx(transaction, id)
 }
 
-export const saveTransaction: SaveTransaction = async (id, tx) =>
-  await save(id, 'created', tx)
+export const saveTx: SaveTransaction = async (id, tx) => save(id, 'created', tx)
 
-export const removeTx = async (id: string) => await save(id, 'deleted')
+export const removeTx = async (id: string) => save(id, 'deleted')
 
 export const getAvailableTxs = async (
   uid: string

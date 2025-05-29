@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
 import { cn } from '@/lib/utils'
 
-import { months } from '../constants'
+import { months } from '../../../constants'
 import { TxCardProps } from './types'
 
 const variants = {

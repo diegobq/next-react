@@ -6,10 +6,10 @@ import toast from 'react-hot-toast'
 import { Button, Form } from '@/app/components/ui'
 import { ActionResponse } from '@/app/types'
 
+import { PeriodSelect } from '../(results)/components/Period'
 import { remove, save } from '../actions'
 import { TransactionProps } from '../actions/types'
 import { fieldsConfig, months, TxTypes } from '../constants'
-import { periodOptions } from '../periodOptions'
 import { OptionProps } from '../types'
 import BackCta from './BackCta'
 import { TxFormProps } from './types'
@@ -121,26 +121,7 @@ export default function TxForm(params: TxFormProps) {
           </div>
 
           <div className="flex flex-col flex-1">
-            <label
-              htmlFor="period"
-              className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200"
-            >
-              Period
-            </label>
-            <select
-              id="period"
-              name="period"
-              value={form.period}
-              onChange={handleChange}
-              className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-              required
-            >
-              {periodOptions.map(({ id, label, value }) => (
-                <option key={id} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            <PeriodSelect period={form.period} onChange={handleChange} />
           </div>
         </div>
 

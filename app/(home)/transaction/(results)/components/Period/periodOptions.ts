@@ -1,6 +1,6 @@
 import { getCurrentDateInfo } from '@/lib/date'
 
-import { OptionProps } from './types'
+import { OptionProps } from '../../../types'
 
 const { currentPeriod } = getCurrentDateInfo()
 

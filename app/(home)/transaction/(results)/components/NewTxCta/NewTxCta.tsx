@@ -6,8 +6,8 @@ import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
 import { Link } from '@/app/components/ui'
 import { getCurrentDateInfo } from '@/lib/date'
 
-import { TxTypes } from '../../constants'
-import { NewCtaProps } from '../types'
+import { TxTypes } from '../../../constants'
+import { NewCtaProps } from './types'
 
 const CtaConfig = {
   buy: {

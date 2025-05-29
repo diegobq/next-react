@@ -9,7 +9,7 @@ import {
   getAvailableTxs,
   getTransaction,
   removeTx,
-  saveTransaction,
+  saveTx,
 } from '@/lib/dal/transaction'
 
 import { TransactionSchema } from './schema'
@@ -38,7 +38,7 @@ export async function save(
   }
 
   try {
-    const data = await saveTransaction(formData.get('id') as string, tx)
+    const data = await saveTx(formData.get('id') as string, tx)
     if (!data) {
       return {
         success: false,
