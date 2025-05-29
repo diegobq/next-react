@@ -3,7 +3,7 @@
 import { useActionState, useState } from 'react'
 import toast from 'react-hot-toast'
 
-import { Button, Form } from '@/app/components/ui'
+import { Button, Form, Select } from '@/app/components/ui'
 import { ActionResponse } from '@/app/types'
 
 import { PeriodSelect } from '../(results)/components/Period'
@@ -20,14 +20,14 @@ const initialState: ActionResponse<TransactionProps> = {
   errors: undefined,
 }
 
-const selectConfig = (value: number, label: string): OptionProps => ({
+const selectConfig = (value: string, label: string): OptionProps => ({
   id: `${value}`,
   value,
   label,
 })
 
 const monthsConfig: OptionProps[] = Array.from({ length: 12 }, (_, i) =>
-  selectConfig(i, months[i])
+  selectConfig(`${i}`, months[i])
 )
 
 export default function TxForm(params: TxFormProps) {
@@ -104,24 +104,20 @@ export default function TxForm(params: TxFormProps) {
             >
               Month
             </label>
-            <select
+            <Select
               id="month"
               name="month"
-              value={form.month}
+              ariaLabel="month"
+              value={`${form.month}`}
+              options={monthsConfig}
               onChange={handleChange}
               className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
               required
-            >
-              {monthsConfig.map(({ id, label, value }) => (
-                <option key={id} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           <div className="flex flex-col flex-1">
-            <PeriodSelect period={form.period} onChange={handleChange} />
+            <PeriodSelect period={`${form.period}`} onChange={handleChange} />
           </div>
         </div>
 

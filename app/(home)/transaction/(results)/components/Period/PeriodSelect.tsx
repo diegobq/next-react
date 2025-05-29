@@ -1,3 +1,5 @@
+import { Select } from '@/app/components/ui'
+
 import { periodOptions } from './periodOptions'
 import { PeriodSelectProps } from './types'
 
@@ -14,20 +16,15 @@ export function PeriodSelect(props: PeriodSelectProps) {
       >
         Period
       </label>
-      <select
+      <Select
         id="period"
         name="period"
+        ariaLabel="period"
         value={period}
         onChange={onChange}
         className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-        required
-      >
-        {periodOptions.map(({ id, label, value }) => (
-          <option key={id} value={value}>
-            {label}
-          </option>
-        ))}
-      </select>
+        options={periodOptions}
+      />
     </>
   )
 }

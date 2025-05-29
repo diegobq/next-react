@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+import { Select } from '@/app/components/ui'
+
 import { periodOptions } from './periodOptions'
 
 export function PeriodFilter() {
@@ -30,21 +32,15 @@ export function PeriodFilter() {
 
   return (
     <div className="mb-6">
-      <select
+      <Select
         id="period"
-        aria-label="Filter by period"
+        ariaLabel="Filter by period"
         name="period"
         value={period}
         onChange={handleChange}
+        options={periodOptions}
         className="w-full border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
-      >
-        <option value="">All Periods</option>
-        {periodOptions.map(({ id, label, value }) => (
-          <option key={id} value={value}>
-            {label}
-          </option>
-        ))}
-      </select>
+      />
     </div>
   )
 }

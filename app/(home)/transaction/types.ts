@@ -2,7 +2,7 @@ import { TypeTransaction } from '@/lib/dal/transaction/types'
 
 export interface OptionProps {
   id: string
-  value: number
+  value: string
   label: string
 }
 

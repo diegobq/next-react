@@ -1,4 +1,4 @@
 export interface PeriodSelectProps {
-  period: number
+  period: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
