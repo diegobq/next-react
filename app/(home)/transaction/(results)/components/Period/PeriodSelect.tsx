@@ -22,7 +22,7 @@ export function PeriodSelect(props: PeriodSelectProps) {
         ariaLabel="period"
         value={period}
         onChange={onChange}
-        className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
+        className="border rounded-md p-2"
         options={periodOptions}
       />
     </>

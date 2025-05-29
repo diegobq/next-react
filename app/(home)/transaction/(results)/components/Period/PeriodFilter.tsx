@@ -39,7 +39,7 @@ export function PeriodFilter() {
         value={period}
         onChange={handleChange}
         options={periodOptions}
-        className="w-full border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
+        className="w-full border rounded-md p-2 text-center"
       />
     </div>
   )

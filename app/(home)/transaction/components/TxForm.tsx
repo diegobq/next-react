@@ -111,7 +111,7 @@ export default function TxForm(params: TxFormProps) {
               value={`${form.month}`}
               options={monthsConfig}
               onChange={handleChange}
-              className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
+              className="border rounded-md p-2"
               required
             />
           </div>
@@ -135,7 +135,7 @@ export default function TxForm(params: TxFormProps) {
               name={name}
               value={form[name as keyof typeof form]}
               onChange={handleChange}
-              className="border rounded-md p-2 bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
+              className="border rounded-md p-2"
               min={min}
               step={step}
               required={!!required}
