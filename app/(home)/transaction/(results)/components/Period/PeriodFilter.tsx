@@ -32,6 +32,7 @@ export function PeriodFilter() {
     <div className="mb-6">
       <select
         id="period"
+        aria-label="Filter by period"
         name="period"
         value={period}
         onChange={handleChange}
