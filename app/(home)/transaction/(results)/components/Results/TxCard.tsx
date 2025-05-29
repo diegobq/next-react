@@ -7,7 +7,7 @@ import { months } from '../../../constants'
 import { TxCardProps } from './types'
 
 const variants = {
-  primary: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800',
+  primary: 'bg-green-700 text-white hover:bg-green-800 active:bg-green-900',
   danger: 'bg-red-600 text-white hover:bg-red-700',
 }
 

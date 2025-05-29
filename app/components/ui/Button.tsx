@@ -21,7 +21,7 @@ export function Button({
     'font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
 
   const variants = {
-    primary: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800',
+    primary: 'bg-green-700 text-white hover:bg-green-800 active:bg-green-900',
     secondary:
       'bg-gray-200 text-gray-900 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600',
     outline:
