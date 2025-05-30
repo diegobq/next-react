@@ -13,7 +13,6 @@ import {
   AuthForm,
   AuthFormWrapper,
   AuthHeader,
-  AuthPageWrapper,
 } from '../components'
 import { HOME_PAGE } from '../constants'
 
@@ -61,7 +60,7 @@ export default function SignUpPage() {
   }, initialState)
 
   return (
-    <AuthPageWrapper>
+    <>
       <AuthHeader>Create a new account</AuthHeader>
 
       <AuthFormWrapper>
@@ -78,6 +77,6 @@ export default function SignUpPage() {
           linkLabel="Sign in"
         />
       </AuthFormWrapper>
-    </AuthPageWrapper>
+    </>
   )
 }

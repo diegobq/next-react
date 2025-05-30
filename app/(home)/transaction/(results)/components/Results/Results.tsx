@@ -24,10 +24,8 @@ export default async function Results() {
   }
 
   return (
-    <>
-      <Suspense fallback={<ResultsSkeleton />}>
-        <TxResults data={data} />
-      </Suspense>
-    </>
+    <Suspense fallback={<ResultsSkeleton />}>
+      <TxResults data={data} />
+    </Suspense>
   )
 }

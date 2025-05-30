@@ -1,14 +1,9 @@
-import {
-  AuthFooter,
-  AuthFormWrapper,
-  AuthHeader,
-  AuthPageWrapper,
-} from '../components'
+import { AuthFooter, AuthFormWrapper, AuthHeader } from '../components'
 import SigninForm from './SigninForm'
 
 export default function SignInPage() {
   return (
-    <AuthPageWrapper>
+    <>
       <AuthHeader>Sign in to your account</AuthHeader>
 
       <AuthFormWrapper>
@@ -20,6 +15,6 @@ export default function SignInPage() {
           linkLabel="Sign up"
         />
       </AuthFormWrapper>
-    </AuthPageWrapper>
+    </>
   )
 }
