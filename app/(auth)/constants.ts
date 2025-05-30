@@ -2,6 +2,7 @@ import { SkipAuthPathnames } from './types'
 
 const SIGNUP = '/signup'
 const SIGNIN_PAGE = '/signin'
+export const APP_NAME = 'Shareger'
 export const TRANSACTION_PAGE = '/transaction'
 export const DEFAULT_AUTH_PAGE = SIGNIN_PAGE
 export const HOME_PAGE = '/'

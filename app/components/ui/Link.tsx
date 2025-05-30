@@ -11,6 +11,7 @@ interface LinkProps {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
   size?: 'sm' | 'md' | 'lg'
   isLoading?: boolean
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
 const baseStyles =
