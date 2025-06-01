@@ -4,14 +4,15 @@ import { useActionState, useState } from 'react'
 import toast from 'react-hot-toast'
 
 import { Button, Form, Select } from '@/app/components/ui'
+import { OptionProps } from '@/app/components/ui/Select/types'
 import { ActionResponse } from '@/app/types'
 
-import { PeriodSelect } from '../(results)/components/Period'
-import { remove, save } from '../actions'
-import { TransactionProps } from '../actions/types'
-import { fieldsConfig, months, TxTypes } from '../constants'
-import { OptionProps } from '../types'
+import { remove, save } from '../../actions'
+import { TransactionProps } from '../../actions/types'
+import { months, TxTypes } from '../../constants'
+import { fieldsConfig } from '../constants'
 import BackCta from './BackCta'
+import { PeriodSelect } from './PeriodSelect'
 import { TxFormProps } from './types'
 
 const initialState: ActionResponse<TransactionProps> = {
@@ -20,13 +21,13 @@ const initialState: ActionResponse<TransactionProps> = {
   errors: undefined,
 }
 
-const selectConfig = (value: string, label: string): OptionProps => ({
+const selectConfig = (value: string, label: string): OptionProps<string> => ({
   id: `${value}`,
   value,
   label,
 })
 
-const monthsConfig: OptionProps[] = Array.from({ length: 12 }, (_, i) =>
+const monthsConfig: OptionProps<string>[] = Array.from({ length: 12 }, (_, i) =>
   selectConfig(`${i}`, months[i])
 )
 

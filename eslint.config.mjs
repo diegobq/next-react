@@ -43,6 +43,15 @@ const eslintConfig = [
       ],
     },
   },
+  {
+    // Global ignores.
+    // node_modules/ and .next/ are typically ignored by default by ESLint v9+
+    // and/or eslint-config-next.
+    ignores: [
+      "out/",   // For Next.js static export output
+      "build/", // For Next.js production build output (if not using 'out')
+    ],
+  },
 ]
 
 export default eslintConfig

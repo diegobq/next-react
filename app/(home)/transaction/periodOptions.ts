@@ -1,6 +1,5 @@
+import { OptionProps } from '@/app/components/ui/Select/types'
 import { getCurrentDateInfo } from '@/lib/date'
-
-import { OptionProps } from '../../../types'
 
 const { currentPeriod } = getCurrentDateInfo()
 
@@ -12,13 +11,13 @@ const createOption = (
   value: string,
   label: string,
   id?: string
-): OptionProps => ({
+): OptionProps<string> => ({
   id: id || `${value}`,
   value,
   label,
 })
 
-export const periodOptions: OptionProps[] = [
+export const periodOptions: OptionProps<string>[] = [
   createOption('', 'All periods', 'all'),
 ].concat(
   Array.from({ length }, (_, i) => createOption(`${END - i}`, `${END - i}`))

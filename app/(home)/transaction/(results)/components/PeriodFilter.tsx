@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 
 import { Select } from '@/app/components/ui'
 
-import { periodOptions } from './periodOptions'
+import { periodOptions } from '../../periodOptions'
 
 export function PeriodFilter() {
   const router = useRouter()

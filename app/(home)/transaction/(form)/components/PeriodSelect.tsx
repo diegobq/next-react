@@ -1,6 +1,6 @@
 import { Select } from '@/app/components/ui'
 
-import { periodOptions } from './periodOptions'
+import { periodOptions } from '../../periodOptions'
 import { PeriodSelectProps } from './types'
 
 export function PeriodSelect(props: PeriodSelectProps) {

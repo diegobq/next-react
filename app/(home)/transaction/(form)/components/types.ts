@@ -1,4 +1,4 @@
-import { TransactionProps } from '../actions/types'
+import { TransactionProps } from '../../actions/types'
 
 export interface BackCtaProps {
   period: number
@@ -11,4 +11,9 @@ export interface TxCardProps {
 
 export interface TxFormProps {
   tx: TransactionProps
+}
+
+export interface PeriodSelectProps {
+  period: string
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }

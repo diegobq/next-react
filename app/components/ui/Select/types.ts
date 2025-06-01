@@ -1,4 +1,4 @@
-interface OptionProps<V> {
+export interface OptionProps<V> {
   id: string
   value: V
   label: string

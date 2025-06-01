@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { TypeTransaction } from '@/lib/dal/transaction/types'
 import { getCurrentDateInfo } from '@/lib/date'
 
-import { TransactionProps } from '../actions/types'
+import { TransactionProps } from '../../actions/types'
 import { TxForm } from '../components'
 import { typesConfig, validTypes } from '../constants'
 
