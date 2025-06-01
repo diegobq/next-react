@@ -15,6 +15,7 @@ const TRANSACTION = 'transaction'
 
 const save: SaveType = async (id, uid, status, tx) => {
   const now = new Date()
+  const userRef = firestore.doc(`users/${uid}`)
   const myCollectionRef = firestore.collection(TRANSACTION)
   if (id) {
     const doc = await myCollectionRef.doc(id).get()
@@ -32,7 +33,7 @@ const save: SaveType = async (id, uid, status, tx) => {
         date: tx ? Timestamp.fromDate(new Date(tx.date)) : data.date,
         createdAt: data.createdAt,
         updatedAt: now,
-        uid,
+        uid: userRef,
       },
       { merge: true }
     )
@@ -47,7 +48,7 @@ const save: SaveType = async (id, uid, status, tx) => {
       date: Timestamp.fromDate(new Date(tx.date)),
       createdAt: now,
       updatedAt: now,
-      uid,
+      uid: userRef,
     })
 
     return tx
