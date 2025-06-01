@@ -6,12 +6,17 @@ import { useCallback } from 'react'
 import { Button } from '@/app/components/ui'
 import { auth } from '@/lib/firebase'
 
-import { removeSession } from '../actions/actions'
+import { removeSession } from '../actions'
+import { useRedirect } from '../hooks'
 
 export default function SignOutButton() {
+  const redirect = useRedirect()
+
   const onClick = useCallback(async () => {
-    signOut(auth).finally(removeSession)
-  }, [])
+    await signOut(auth)
+    await removeSession()
+    redirect()
+  }, [redirect])
 
   return (
     <Button

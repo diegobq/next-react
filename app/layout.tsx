@@ -5,8 +5,6 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 
-import { AuthProvider } from '@/app/(auth)'
-
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -34,7 +32,7 @@ export default async function RootLayout({
       >
         <Toaster position="top-center" reverseOrder={false} />
 
-        <AuthProvider>{children}</AuthProvider>
+        {children}
       </body>
     </html>
   )

@@ -2,4 +2,4 @@ export {
   createSessionCookie,
   deleteSessionCookie,
   getAuthenticatedUserServer,
-} from './auth'
+} from './authAction'

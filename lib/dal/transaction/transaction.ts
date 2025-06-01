@@ -1,7 +1,6 @@
 import { Timestamp } from 'firebase-admin/firestore'
 
 import { TransactionProps } from '@/app/(home)/transaction/actions/types'
-import { getAuthenticatedUserServer } from '@/lib/auth'
 import { firestore } from '@/lib/firebaseAdmin'
 
 import {
@@ -14,13 +13,7 @@ import {
 
 const TRANSACTION = 'transaction'
 
-const save: SaveType = async (id, status, tx) => {
-  const authenticatedUser = await getAuthenticatedUserServer()
-  if (!authenticatedUser) return
-
-  const { uid: userStringId } = authenticatedUser
-  const uid = firestore.doc(`users/${userStringId}`)
-
+const save: SaveType = async (id, uid, status, tx) => {
   const now = new Date()
   const myCollectionRef = firestore.collection(TRANSACTION)
   if (id) {
@@ -83,9 +76,11 @@ export const getTransaction: GetTransaction = async (id) => {
   return transformTx(transaction, id)
 }
 
-export const saveTx: SaveTransaction = async (id, tx) => save(id, 'created', tx)
+export const saveTx: SaveTransaction = async (id, uid, tx) =>
+  save(id, uid, 'created', tx)
 
-export const removeTx = async (id: string) => save(id, 'deleted')
+export const removeTx = async (id: string, uid: string) =>
+  save(id, uid, 'deleted')
 
 export const getAvailableTxs = async (
   uid: string

@@ -1,1 +1,1 @@
-export { createSession } from './actions'
+export { createSession, removeSession } from './actions'

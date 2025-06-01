@@ -2,9 +2,9 @@
 
 import { redirect } from 'next/navigation'
 
+import { getAuthenticatedUserServer } from '@/app/(auth)/actions/authAction'
 import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
 import { ActionResponse } from '@/app/types'
-import { getAuthenticatedUserServer } from '@/lib/auth/auth'
 import {
   getAvailableTxs,
   getTransaction,
@@ -18,6 +18,8 @@ import { TransactionProps } from './types'
 export async function save(
   formData: FormData
 ): Promise<ActionResponse<TransactionProps>> {
+  const { uid } = await getAuthenticatedUserServer()
+
   const data = {
     type: formData.get('type') as string,
     date: formData.get('date') as string,
@@ -38,7 +40,7 @@ export async function save(
   }
 
   try {
-    const data = await saveTx(formData.get('id') as string, tx)
+    const data = await saveTx(formData.get('id') as string, uid, tx)
     if (!data) {
       return {
         success: false,
@@ -61,6 +63,7 @@ export async function save(
 export async function get(
   id: string
 ): Promise<ActionResponse<TransactionProps>> {
+  await getAuthenticatedUserServer()
   try {
     if (!id) {
       return {
@@ -95,9 +98,11 @@ export async function get(
 }
 
 export async function remove(id: string): Promise<ActionResponse> {
+  const { uid } = await getAuthenticatedUserServer()
+
   let data
   try {
-    data = await removeTx(id)
+    data = await removeTx(id, uid)
   } catch (error) {
     console.error('remove transaction error:', error)
     return {
@@ -118,29 +123,20 @@ export async function remove(id: string): Promise<ActionResponse> {
 }
 
 export async function getAll(): Promise<ActionResponse<TransactionProps[]>> {
-  try {
-    const user = await getAuthenticatedUserServer()
-    if (!user) {
-      return {
-        success: false,
-        message: 'Unauthorized',
-        error: 'Unauthorized',
-      }
-    }
+  const { uid } = await getAuthenticatedUserServer()
 
-    const transactions = await getAvailableTxs(user.uid)
-
-    return {
-      data: transactions,
+  return getAvailableTxs(uid)
+    .then((data) => ({
+      data,
       success: true,
       message: 'Transactions saved',
-    }
-  } catch (error) {
-    console.error('get transactions error:', error)
-    return {
-      success: false,
-      message: 'An error occurred while getting the transactions',
-      error: 'Failed to get transactions',
-    }
-  }
+    }))
+    .catch((error) => {
+      console.error('get transactions error:', error)
+      return {
+        success: false,
+        message: 'An error occurred while getting the transactions',
+        error: 'Failed to get transactions',
+      }
+    })
 }

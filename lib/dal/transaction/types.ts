@@ -19,13 +19,15 @@ export interface TransactionDBProps
 
 export type SaveType = (
   id: string,
+  uid: string,
   status: StatusType,
   tx?: TransactionProps
 ) => Promise<TransactionProps | undefined>
 
 export type SaveTransaction = (
   id: string,
-  props: TransactionProps
+  uid: string,
+  tx: TransactionProps
 ) => Promise<TransactionProps | undefined>
 export type GetTransaction = (
   id: string
