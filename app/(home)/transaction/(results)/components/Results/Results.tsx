@@ -1,7 +1,5 @@
-import { Suspense } from 'react'
-
 import { getAll } from '../../../actions'
-import ResultsSkeleton from './ResultsSkeleton'
+import { TxTypes } from '../../../constants'
 import TxResults from './TxResults'
 
 export default async function Results() {
@@ -23,9 +21,11 @@ export default async function Results() {
     )
   }
 
-  return (
-    <Suspense fallback={<ResultsSkeleton />}>
-      <TxResults data={data} />
-    </Suspense>
+  const total = data.reduce(
+    (acc, { type, quantity }) =>
+      acc + (type === TxTypes.BUY ? quantity : -quantity),
+    0
   )
+
+  return <TxResults data={data} total={total} />
 }

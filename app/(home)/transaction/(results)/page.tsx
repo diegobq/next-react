@@ -1,5 +1,8 @@
+import { Suspense } from 'react'
+
 import { TxTypes } from '../constants'
 import { NewTxCta, PeriodFilter, Results } from './components'
+import ResultsSkeleton from './components/Results/ResultsSkeleton'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,7 +15,9 @@ export default function TransactionsPage() {
       </div>
       <PeriodFilter />
 
-      <Results />
+      <Suspense fallback={<ResultsSkeleton />}>
+        <Results />
+      </Suspense>
     </>
   )
 }
