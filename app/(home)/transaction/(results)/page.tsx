@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 export default function TransactionsPage() {
   return (
     <>
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
         <NewTxCta type={TxTypes.BUY} />
         <NewTxCta type={TxTypes.SELL} />
       </div>

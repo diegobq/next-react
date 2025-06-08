@@ -27,5 +27,12 @@ export default async function Results() {
     0
   )
 
-  return <TxResults data={data} total={total} />
+  return (
+    <>
+      <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4 text-center">
+        {total}
+      </div>
+      <TxResults data={data} />
+    </>
+  )
 }

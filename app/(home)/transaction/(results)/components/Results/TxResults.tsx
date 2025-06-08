@@ -3,27 +3,47 @@
 import { useSearchParams } from 'next/navigation'
 import { useMemo } from 'react'
 
+import { Link } from '@/app/components/ui'
+
 import { TransactionProps } from '../../../actions/types'
 import { TxTypes } from '../../../constants'
 import TxCard from './TxCard'
 
-export default function TxResults({
-  data,
-  total,
-}: {
-  data: TransactionProps[]
-  total: number
-}) {
+export default function TxResults({ data }: { data: TransactionProps[] }) {
   const searchParams = useSearchParams()
   const selectedPeriod = searchParams.get('period')
+  const selectedType = searchParams.get('type')
 
-  const filteredTransactions = useMemo(() => {
-    if (!selectedPeriod) {
-      return data
-    }
+  const paramsBuy = new URLSearchParams(searchParams.toString())
+  const paramsSell = new URLSearchParams(searchParams.toString())
+  if (selectedPeriod) {
+    paramsBuy.set('period', selectedPeriod)
+    paramsSell.set('period', selectedPeriod)
+  } else {
+    paramsBuy.delete('period')
+    paramsSell.delete('period')
+  }
 
-    return data?.filter((tx) => String(tx.period) === selectedPeriod)
-  }, [data, selectedPeriod])
+  if (selectedType === TxTypes.BUY) {
+    paramsBuy.delete('type')
+    paramsSell.set('type', TxTypes.SELL)
+  } else if (selectedType === TxTypes.SELL) {
+    paramsSell.delete('type')
+    paramsBuy.set('type', TxTypes.BUY)
+  } else {
+    paramsBuy.set('type', TxTypes.BUY)
+    paramsSell.set('type', TxTypes.SELL)
+  }
+
+  const filteredTransactions = useMemo(
+    () =>
+      data?.filter(
+        ({ type, period }) =>
+          (!selectedPeriod || String(period) === selectedPeriod) &&
+          (!selectedType || type === selectedType)
+      ),
+    [data, selectedPeriod, selectedType]
+  )
 
   const [buyTotal, sellTotal] = useMemo(
     () =>
@@ -50,15 +70,26 @@ export default function TxResults({
         </p>
       )}
 
-      <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4 text-center">
-        Total: {total}
+      <div className="flex justify-center gap-4 text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4 text-center">
+        <Link
+          href={`?${paramsBuy.toString()}`}
+          variant={!!buyTotal ? 'primary' : 'secondary'}
+          className="w-28"
+        >
+          {buyTotal}
+        </Link>
+        <Link
+          href={`?${paramsSell.toString()}`}
+          variant={!!sellTotal ? 'danger' : 'secondary'}
+          className="w-28"
+        >
+          {sellTotal}
+        </Link>
       </div>
-      <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4 text-center">
-        Buy: {buyTotal} - Sell: {sellTotal}
-      </div>
-      {!!selectedPeriod && (
+
+      {!!selectedPeriod && !selectedType && (
         <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4 text-center">
-          Diff: {buyTotal - sellTotal}
+          {buyTotal - sellTotal}
         </div>
       )}
 
