@@ -55,9 +55,9 @@ export default function TxForm(params: TxFormProps) {
     }
 
     setIsRemoving(true)
-    const result = await remove(form.id)
-    if (result.success === false) {
-      toast.error(result.message || 'Failed to remove transaction.')
+    const { success } = await remove(form)
+    if (success === false) {
+      toast.error('Failed to remove transaction.')
     }
     setIsRemoving(false)
   }

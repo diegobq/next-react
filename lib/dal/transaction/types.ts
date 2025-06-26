@@ -7,7 +7,7 @@ import { DBProps } from '../types'
 
 export type TypeTransaction = (typeof TxTypes)[keyof typeof TxTypes]
 
-type StatusType = 'created' | 'deleted'
+export type StatusType = 'created' | 'deleted'
 
 export interface TransactionDBProps
   extends Omit<TransactionProps, 'date'>,
@@ -17,18 +17,12 @@ export interface TransactionDBProps
   uid: string
 }
 
-export type SaveType = (
-  id: string,
-  uid: string,
+export type SaveTxType = (
+  tx: TransactionProps,
   status: StatusType,
-  tx?: TransactionProps
+  uid: string
 ) => Promise<TransactionProps | undefined>
 
-export type SaveTransaction = (
-  id: string,
-  uid: string,
-  tx: TransactionProps
-) => Promise<TransactionProps | undefined>
 export type GetTransaction = (
   id: string
 ) => Promise<TransactionProps | undefined>

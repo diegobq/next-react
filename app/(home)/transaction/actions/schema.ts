@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const TransactionSchema = z.object({
+  id: z.string().optional(),
   type: z.enum(['buy', 'sell']),
   date: z.string(),
   period: z.string().transform((val) => {

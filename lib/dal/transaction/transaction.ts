@@ -1,19 +1,21 @@
 import { Timestamp } from 'firebase-admin/firestore'
+import { unstable_cacheTag as cacheTag } from 'next/cache'
 
 import { TransactionProps } from '@/app/(home)/transaction/actions/types'
 import { firestore } from '@/lib/firebaseAdmin'
 
+import { GET_AVAILABLE_TXS_TAG } from './tags'
 import {
   GetTransaction,
-  SaveTransaction,
-  SaveType,
+  SaveTxType,
   TransactionDBProps,
   TransformTxType,
 } from './types'
 
 const TRANSACTION = 'transaction'
 
-const save: SaveType = async (id, uid, status, tx) => {
+export const saveTx: SaveTxType = async (tx, status, uid) => {
+  const { id } = tx
   const now = new Date()
   const userRef = firestore.doc(`users/${uid}`)
   const myCollectionRef = firestore.collection(TRANSACTION)
@@ -77,15 +79,11 @@ export const getTransaction: GetTransaction = async (id) => {
   return transformTx(transaction, id)
 }
 
-export const saveTx: SaveTransaction = async (id, uid, tx) =>
-  save(id, uid, 'created', tx)
-
-export const removeTx = async (id: string, uid: string) =>
-  save(id, uid, 'deleted')
-
 export const getAvailableTxs = async (
   uid: string
 ): Promise<TransactionProps[]> => {
+  'use cache'
+  cacheTag(GET_AVAILABLE_TXS_TAG)
   const query = firestore
     .collection(TRANSACTION)
     .where('uid', '==', firestore.doc(`users/${uid}`))

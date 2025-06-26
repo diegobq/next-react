@@ -4,8 +4,8 @@ import { Link } from '@/app/components/ui'
 import { NavLinksProps } from './types'
 
 const navLinks = [
+  { href: '/', label: 'Home' },
   { href: TRANSACTION_PAGE, label: 'Transactions' },
-  // { href: '/dashboard', label: 'Dashboard' },
   // { href: '/profile', label: 'Profile' },
 ]
 
