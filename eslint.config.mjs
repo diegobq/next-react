@@ -1,6 +1,7 @@
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { FlatCompat } from '@eslint/eslintrc'
+import prettierPlugin from 'eslint-plugin-prettier'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
 
@@ -13,6 +14,21 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+  {
+    plugins: {
+      prettier: prettierPlugin,
+    },
+    rules: {
+      'prettier/prettier': [
+        'error',
+        {
+          semi: false,
+          singleQuote: true,
+          trailingComma: 'es5',
+        },
+      ],
+    },
+  },
   {
     plugins: {
       'simple-import-sort': simpleImportSort,
@@ -46,10 +62,14 @@ const eslintConfig = [
   {
     // Global ignores.
     // node_modules/ and .next/ are typically ignored by default by ESLint v9+
-    // and/or eslint-config-next.
+    // and/or eslint-config-next, but we are being explicit here for clarity.
     ignores: [
+      'node_modules/',
+      '.next/',
       'out/', // For Next.js static export output
       'build/', // For Next.js production build output (if not using 'out')
+      // Ignore config files
+      'next.config.ts',
     ],
   },
 ]
