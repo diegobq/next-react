@@ -8,20 +8,19 @@ import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
 import { ActionResponse } from '@/app/types'
 import { getAvailableTxs, getTransaction, saveTx } from '@/lib/dal/transaction'
 import { GET_AVAILABLE_TXS_TAG } from '@/lib/dal/transaction/tags'
-import { StatusType } from '@/lib/dal/transaction/types'
 
 import { TransactionSchema } from './schema'
-import { TransactionProps } from './types'
+import { StatusType, TransactionProps } from './types'
 
 async function update(
   tx: TransactionProps,
-  status: StatusType,
-  uid: string
+  uid: string,
+  status?: StatusType
 ): Promise<ActionResponse<TransactionProps>> {
   const { period } = tx
 
   try {
-    const data = await saveTx(tx, status, uid)
+    const data = await saveTx(tx, uid, status)
     if (!data) {
       return {
         success: false,
@@ -50,6 +49,7 @@ export async function save(
   const data = {
     id: formData.get('id') as string,
     type: formData.get('type') as string,
+    status: formData.get('status') as string,
     date: formData.get('date') as string,
     period: formData.get('period') as string,
     month: formData.get('month') as string,
@@ -67,7 +67,7 @@ export async function save(
     }
   }
 
-  return update(tx, 'created', uid)
+  return update(tx, uid)
 }
 
 export async function remove(
@@ -75,7 +75,7 @@ export async function remove(
 ): Promise<ActionResponse<TransactionProps>> {
   const { uid } = await getAuthenticatedUserServer()
 
-  return update(tx, 'deleted', uid)
+  return update(tx, uid, 'deleted')
 }
 
 export async function get(

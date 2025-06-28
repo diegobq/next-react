@@ -9,7 +9,7 @@ import { ActionResponse } from '@/app/types'
 
 import { remove, save } from '../../actions'
 import { TransactionProps } from '../../actions/types'
-import { months, TxTypes } from '../../constants'
+import { months, statuses, TxTypes } from '../../constants'
 import { fieldsConfig } from '../constants'
 import BackCta from './BackCta'
 import { PeriodSelect } from './PeriodSelect'
@@ -29,6 +29,10 @@ const selectConfig = (value: string, label: string): OptionProps<string> => ({
 
 const monthsConfig: OptionProps<string>[] = Array.from({ length: 12 }, (_, i) =>
   selectConfig(`${i}`, months[i])
+)
+
+const statusConfig: OptionProps<string>[] = Object.values(statuses).map(
+  ({ value, label }) => selectConfig(value, label)
 )
 
 export default function TxForm(params: TxFormProps) {
@@ -120,6 +124,25 @@ export default function TxForm(params: TxFormProps) {
           <div className="flex flex-col flex-1">
             <PeriodSelect period={`${form.period}`} onChange={handleChange} />
           </div>
+        </div>
+
+        <div className="flex flex-col flex-1">
+          <label
+            htmlFor="status"
+            className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200"
+          >
+            Status
+          </label>
+          <Select
+            id="status"
+            name="status"
+            ariaLabel="status"
+            value={`${form.status}`}
+            options={statusConfig}
+            onChange={handleChange}
+            className="border rounded-md p-2"
+            required
+          />
         </div>
 
         {fieldsConfig.map(({ id, name, type, min, step, required }) => (

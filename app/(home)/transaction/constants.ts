@@ -17,3 +17,14 @@ export const months = [
   'November',
   'December',
 ]
+
+export const statuses = {
+  CREATED: {
+    value: 'created',
+    label: 'Created',
+  },
+  PENDING: {
+    value: 'pending',
+    label: 'Pending',
+  },
+}

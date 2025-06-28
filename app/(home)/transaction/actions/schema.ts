@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const TransactionSchema = z.object({
   id: z.string().optional(),
   type: z.enum(['buy', 'sell']),
+  status: z.enum(['created', 'pending']),
   date: z.string(),
   period: z.string().transform((val) => {
     const num = parseInt(val, 10)

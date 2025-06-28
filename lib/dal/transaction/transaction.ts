@@ -14,11 +14,12 @@ import {
 
 const TRANSACTION = 'transaction'
 
-export const saveTx: SaveTxType = async (tx, status, uid) => {
+export const saveTx: SaveTxType = async (tx, uid, status) => {
   const { id } = tx
   const now = new Date()
   const userRef = firestore.doc(`users/${uid}`)
   const myCollectionRef = firestore.collection(TRANSACTION)
+
   if (id) {
     const doc = await myCollectionRef.doc(id).get()
 
@@ -31,7 +32,7 @@ export const saveTx: SaveTxType = async (tx, status, uid) => {
     await doc.ref.set(
       {
         ...(tx || data),
-        status,
+        status: status || tx.status,
         date: tx ? Timestamp.fromDate(new Date(tx.date)) : data.date,
         createdAt: data.createdAt,
         updatedAt: now,
@@ -60,6 +61,7 @@ export const saveTx: SaveTxType = async (tx, status, uid) => {
 const transformTx: TransformTxType = (tx, id) => ({
   id,
   type: tx.type,
+  status: tx.status,
   period: tx.period,
   month: tx.month,
   quantity: tx.quantity,

@@ -24,6 +24,7 @@ export default function FormPage() {
   const transaction: TransactionProps = {
     id: undefined,
     type: validTypeFromUrl || validTypes[0],
+    status: 'created',
     date: today.toISOString().split('T')[0],
     period: period,
     month: currentMonth,
