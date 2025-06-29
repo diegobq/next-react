@@ -47,7 +47,7 @@ export const saveTx: SaveTxType = async (tx, uid, status) => {
     const newDocRef = myCollectionRef.doc()
     await newDocRef.create({
       ...tx,
-      status,
+      status: tx.status,
       date: Timestamp.fromDate(new Date(tx.date)),
       createdAt: now,
       updatedAt: now,
