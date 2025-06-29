@@ -1,5 +1,5 @@
 import { getAll } from '../../../actions'
-import { TxTypes } from '../../../constants'
+import { statuses, TxTypes } from '../../../constants'
 import TxResults from './TxResults'
 
 export default async function Results() {
@@ -22,8 +22,10 @@ export default async function Results() {
   }
 
   const total = data.reduce(
-    (acc, { type, quantity }) =>
-      acc + (type === TxTypes.BUY ? quantity : -quantity),
+    (acc, { status, type, quantity }) =>
+      acc +
+      (type === TxTypes.BUY ? quantity : -quantity) *
+        (status === statuses.PENDING.value ? 0 : 1),
     0
   )
 
