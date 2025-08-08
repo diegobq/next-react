@@ -11,7 +11,7 @@ import { DBProps } from '../types'
 export type TypeTransaction = (typeof TxTypes)[keyof typeof TxTypes]
 
 export interface TransactionDBProps
-  extends Omit<TransactionProps, 'date'>,
+  extends Omit<TransactionProps, 'id' | 'date'>,
     DBProps {
   date: Timestamp
   uid: string

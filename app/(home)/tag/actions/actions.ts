@@ -4,23 +4,20 @@ import { revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { getAuthenticatedUserServer } from '@/app/(auth)/actions/authAction'
-import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
+import { TAG_PAGE } from '@/app/(auth)/constants'
 import { ActionResponse } from '@/app/types'
-import { GET_AVAILABLE_TXS_TAG } from '@/lib/dal/tags'
-import { getAvailableTxs, getTransaction, saveTx } from '@/lib/dal/transaction'
+import { getAvailableTags, getTag, saveTag } from '@/lib/dal/tag'
+import { GET_AVAILABLE_TAGS_TAG } from '@/lib/dal/tags'
 
-import { TransactionSchema } from './schema'
-import { StatusType, TransactionProps } from './types'
+import { TagSchema } from './schema'
+import { TagProps } from './types'
 
 async function update(
-  tx: TransactionProps,
-  uid: string,
-  status?: StatusType
-): Promise<ActionResponse<TransactionProps>> {
-  const { period } = tx
-
+  tx: TagProps,
+  uid: string
+): Promise<ActionResponse<TagProps>> {
   try {
-    const data = await saveTx(tx, uid, status)
+    const data = await saveTag(tx, uid)
     if (!data) {
       return {
         success: false,
@@ -37,32 +34,28 @@ async function update(
     }
   }
 
-  revalidateTag(GET_AVAILABLE_TXS_TAG)
-  redirect(`${TRANSACTION_PAGE}?period=${period}`)
+  revalidateTag(GET_AVAILABLE_TAGS_TAG)
+  redirect(TAG_PAGE)
 }
 
 export async function save(
   formData: FormData
-): Promise<ActionResponse<TransactionProps>> {
+): Promise<ActionResponse<TagProps>> {
   const { uid } = await getAuthenticatedUserServer()
 
   const data = {
     id: formData.get('id') as string,
-    type: formData.get('type') as string,
-    status: formData.get('status') as string,
+    title: formData.get('title') as string,
     date: formData.get('date') as string,
-    period: formData.get('period') as string,
-    month: formData.get('month') as string,
-    quantity: formData.get('quantity') as string,
-    price: formData.get('price') as string,
+    total: formData.get('total') as string,
   }
 
-  const { data: tx, success, error } = TransactionSchema.safeParse(data)
+  const { data: tx, success, error } = TagSchema.safeParse(data)
 
   if (!success) {
     return {
       success: false,
-      message: 'Transaction error',
+      message: 'Tag error',
       errors: error.flatten().fieldErrors,
     }
   }
@@ -70,55 +63,51 @@ export async function save(
   return update(tx, uid)
 }
 
-export async function remove(
-  tx: TransactionProps
-): Promise<ActionResponse<TransactionProps>> {
+export async function remove(tx: TagProps): Promise<ActionResponse<TagProps>> {
   const { uid } = await getAuthenticatedUserServer()
 
-  return update(tx, uid, 'deleted')
+  return update(tx, uid)
 }
 
-export async function get(
-  id: string
-): Promise<ActionResponse<TransactionProps>> {
+export async function get(id: string): Promise<ActionResponse<TagProps>> {
   await getAuthenticatedUserServer()
   try {
     if (!id) {
       return {
         success: true,
-        message: 'new transaction',
+        message: 'new tag',
       }
     }
 
-    const transaction = await getTransaction(id)
+    const transaction = await getTag(id)
 
     if (!transaction) {
       return {
         data: undefined,
         success: false,
-        message: 'not found transaction',
+        message: 'not found tag',
       }
     }
 
     return {
       data: transaction,
       success: true,
-      message: 'get Transaction',
+      message: 'get tag',
     }
   } catch (error) {
-    console.error('get transaction error:', error)
+    console.error('get tag error:', error)
     return {
       success: false,
-      message: 'An error occurred while getting the transaction',
-      error: 'Failed to get transaction',
+      message: 'An error occurred while getting the tag',
+      error: 'Failed to get tag',
     }
   }
 }
 
-export async function getAll(): Promise<ActionResponse<TransactionProps[]>> {
+export async function getAll(): Promise<ActionResponse<TagProps[]>> {
   const { uid } = await getAuthenticatedUserServer()
 
-  return getAvailableTxs(uid)
+  return getAvailableTags(uid)
     .then((data) => ({
       data,
       success: true,

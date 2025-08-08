@@ -4,7 +4,7 @@ import { unstable_cacheTag as cacheTag } from 'next/cache'
 import { TransactionProps } from '@/app/(home)/transaction/actions/types'
 import { firestore } from '@/lib/firebaseAdmin'
 
-import { GET_AVAILABLE_TXS_TAG } from './tags'
+import { GET_AVAILABLE_TXS_TAG } from '../tags'
 import {
   GetTransaction,
   SaveTxType,
@@ -12,13 +12,13 @@ import {
   TransformTxType,
 } from './types'
 
-const TRANSACTION = 'transaction'
+const collectionName = 'transaction'
 
 export const saveTx: SaveTxType = async (tx, uid, status) => {
   const { id } = tx
   const now = new Date()
   const userRef = firestore.doc(`users/${uid}`)
-  const myCollectionRef = firestore.collection(TRANSACTION)
+  const myCollectionRef = firestore.collection(collectionName)
 
   if (id) {
     const doc = await myCollectionRef.doc(id).get()
@@ -70,7 +70,7 @@ const transformTx: TransformTxType = (tx, id) => ({
 })
 
 export const getTransaction: GetTransaction = async (id) => {
-  const doc = await firestore.collection(TRANSACTION).doc(id).get()
+  const doc = await firestore.collection(collectionName).doc(id).get()
 
   if (!doc.exists) return
 
@@ -87,7 +87,7 @@ export const getAvailableTxs = async (
   'use cache'
   cacheTag(GET_AVAILABLE_TXS_TAG)
   const query = firestore
-    .collection(TRANSACTION)
+    .collection(collectionName)
     .where('uid', '==', firestore.doc(`users/${uid}`))
     .where('status', '!=', 'deleted')
     .orderBy('period', 'desc')

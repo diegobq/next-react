@@ -1,12 +1,11 @@
-import { TRANSACTION_PAGE } from '@/app/(auth)/constants'
+import { TAG_PAGE, TRANSACTION_PAGE } from '@/app/(auth)/constants'
 import { Link } from '@/app/components/ui'
 
 import { NavLinksProps } from './types'
 
 const navLinks = [
-  { href: '/', label: 'Home' },
+  { href: TAG_PAGE, label: 'Tags' },
   { href: TRANSACTION_PAGE, label: 'Transactions' },
-  // { href: '/profile', label: 'Profile' },
 ]
 
 export default function NavLinks(props: NavLinksProps) {
