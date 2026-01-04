@@ -37,7 +37,7 @@ async function update(
     }
   }
 
-  revalidateTag(GET_AVAILABLE_TXS_TAG)
+  revalidateTag(GET_AVAILABLE_TXS_TAG, { expire: 0 })
   redirect(`${TRANSACTION_PAGE}?period=${period}`)
 }
 

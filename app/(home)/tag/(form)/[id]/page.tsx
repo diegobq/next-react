@@ -1,6 +1,9 @@
 import { Suspense } from 'react'
 
-import { PageProps } from '@/.next/types/app/layout'
+type PageProps = {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
 
 import { get } from '../../actions'
 import { TagForm, TagFormSkeleton } from '../components'

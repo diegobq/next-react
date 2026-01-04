@@ -34,7 +34,7 @@ async function update(
     }
   }
 
-  revalidateTag(GET_AVAILABLE_TAGS_TAG)
+  revalidateTag(GET_AVAILABLE_TAGS_TAG, { expire: 0 })
   redirect(TAG_PAGE)
 }
 
