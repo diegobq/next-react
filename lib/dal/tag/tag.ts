@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase-admin/firestore'
-import { unstable_cacheTag as cacheTag } from 'next/cache'
+import { cacheTag } from 'next/cache'
 
 import { TagProps } from '@/app/(home)/tag/actions/types'
 import { firestore } from '@/lib/firebaseAdmin'
