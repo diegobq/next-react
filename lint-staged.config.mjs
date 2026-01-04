@@ -1,10 +1,12 @@
 import path from 'path'
 
 const buildEslintCommand = (filenames) =>
-  `next lint --fix --file ${filenames
+  `eslint --fix ${filenames
     .map((f) => path.relative(process.cwd(), f))
-    .join(' --file ')}`
+    .join(' ')}`
 
-export default {
+const config = {
   '*.{js,jsx,ts,tsx}': ['prettier --write', buildEslintCommand],
 }
+
+export default config

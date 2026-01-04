@@ -1,7 +1,6 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useMemo } from 'react'
 
 import { Link } from '@/app/components/ui'
 
@@ -35,31 +34,23 @@ export default function TxResults({ data }: { data: TransactionProps[] }) {
     paramsSell.set('type', TxTypes.SELL)
   }
 
-  const filteredTransactions = useMemo(
-    () =>
-      data?.filter(
-        ({ type, period }) =>
-          (!selectedPeriod || String(period) === selectedPeriod) &&
-          (!selectedType || type === selectedType)
-      ),
-    [data, selectedPeriod, selectedType]
+  const filteredTransactions = data?.filter(
+    ({ type, period }) =>
+      (!selectedPeriod || String(period) === selectedPeriod) &&
+      (!selectedType || type === selectedType)
   )
 
-  const [buyTotal, sellTotal] = useMemo(
-    () =>
-      filteredTransactions.reduce(
-        (acc, { type, quantity }) => {
-          if (type === TxTypes.BUY) {
-            acc[0] += quantity
-          } else {
-            acc[1] += quantity
-          }
+  const [buyTotal, sellTotal] = filteredTransactions.reduce(
+    (acc, { type, quantity }) => {
+      if (type === TxTypes.BUY) {
+        acc[0] += quantity
+      } else {
+        acc[1] += quantity
+      }
 
-          return acc
-        },
-        [0, 0]
-      ),
-    [filteredTransactions]
+      return acc
+    },
+    [0, 0]
   )
 
   return (
