@@ -12,35 +12,36 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "check": "npm run lint && npm run typecheck",
+    "check": "pnpm lint && pnpm typecheck",
     "prepare": "husky"
   },
+  "packageManager": "pnpm@10.27.0",
   "dependencies": {
-    "firebase": "^11.6.0",
-    "firebase-admin": "^13.3.0",
+    "firebase": "^11.10.0",
+    "firebase-admin": "^13.6.0",
     "next": "^16.1.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-hot-toast": "^2.5.2"
+    "react-hot-toast": "^2.6.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@eslint/eslintrc": "^3.3.3",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^20.19.27",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "clsx": "^2.1.1",
-    "eslint": "^9",
+    "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.1",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.5.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-unused-imports": "^4.1.4",
+    "eslint-plugin-unused-imports": "^4.3.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.1",
-    "tailwind-merge": "^3.2.0",
-    "tailwindcss": "^4",
-    "typescript": "^5",
-    "zod": "^3.24.3"
+    "lint-staged": "^15.5.2",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "zod": "^3.25.76"
   }
 }
