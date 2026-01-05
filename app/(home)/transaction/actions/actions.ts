@@ -116,20 +116,16 @@ export async function get(
 }
 
 export async function getAll(): Promise<ActionResponse<TransactionProps[]>> {
-  const { uid } = await getAuthenticatedUserServer()
-
-  return getAvailableTxs(uid)
+  return getAuthenticatedUserServer()
+    .then(getAvailableTxs)
     .then((data) => ({
       data,
       success: true,
-      message: 'Transactions saved',
+      message: 'Transactions',
     }))
-    .catch((error) => {
-      console.error('get transactions error:', error)
-      return {
-        success: false,
-        message: 'An error occurred while getting the transactions',
-        error: 'Failed to get transactions',
-      }
-    })
+    .catch(() => ({
+      success: false,
+      message: 'An error occurred while getting the transactions',
+      error: 'Failed to get transactions',
+    }))
 }

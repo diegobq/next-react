@@ -6,6 +6,7 @@ import { firestore } from '@/lib/firebaseAdmin'
 
 import { GET_AVAILABLE_TXS_TAG } from '../tags'
 import {
+  GetAvailableTxs,
   GetTransaction,
   SaveTxType,
   TransactionDBProps,
@@ -81,9 +82,7 @@ export const getTransaction: GetTransaction = async (id) => {
   return transformTx(transaction, id)
 }
 
-export const getAvailableTxs = async (
-  uid: string
-): Promise<TransactionProps[]> => {
+export const getAvailableTxs: GetAvailableTxs = async ({ uid }) => {
   'use cache'
   cacheTag(GET_AVAILABLE_TXS_TAG)
   const query = firestore

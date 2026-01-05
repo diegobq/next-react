@@ -75,7 +75,4 @@ export async function getAuthenticatedUserServer(): Promise<IAuthenticatedUser> 
 
       return { uid, email }
     })
-    .catch((error) => {
-      throw error
-    })
 }

@@ -26,6 +26,12 @@ export type GetTransaction = (
   id: string
 ) => Promise<TransactionProps | undefined>
 
+export type GetAvailableTxs = ({
+  uid,
+}: {
+  uid: string
+}) => Promise<TransactionProps[]>
+
 export type TransformTxType = (
   props: TransactionDBProps,
   id: string
