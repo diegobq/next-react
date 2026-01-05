@@ -16,6 +16,14 @@
     "prepare": "husky"
   },
   "packageManager": "pnpm@10.27.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@firebase/util",
+      "protobufjs",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
   "dependencies": {
     "firebase": "^11.10.0",
     "firebase-admin": "^13.6.0",
